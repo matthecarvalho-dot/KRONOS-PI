@@ -105,7 +105,6 @@
             100% { transform: rotateY(360deg); }
         }
 
-        /* Brilho pulsante */
         .logo-glow {
             position: absolute;
             width: 140px;
@@ -125,7 +124,6 @@
             50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.8; }
         }
 
-        /* Versão pequena sidebar */
         .kronos-logo-small {
             width: 60px;
             height: 60px;
@@ -163,7 +161,6 @@
             overflow: hidden;
         }
 
-        /* Partículas */
         .particles {
             position: absolute;
             top: 0;
@@ -924,35 +921,24 @@
         .toast-info { background: var(--info); color: white; }
 
         @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            .sidebar.mobile-open {
-                transform: translateX(0);
-            }
-            .main-content {
-                margin-left: 0;
-            }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.mobile-open { transform: translateX(0); }
+            .main-content { margin-left: 0; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ==================== TELA DE LOGIN ==================== -->
+    <!-- TELA DE LOGIN -->
     <div class="login-wrapper" id="loginScreen">
         <div class="particles" id="particles"></div>
         
         <div class="login-card">
-            <!-- LOGO K GIRANDO VERTICALMENTE -->
             <div class="kronos-logo">
                 <div class="logo-glow"></div>
                 <div class="logo-inner">
-                    <div class="logo-face logo-front">
-                        <span class="logo-letter">K</span>
-                    </div>
-                    <div class="logo-face logo-back">
-                        <span class="logo-letter">K</span>
-                    </div>
+                    <div class="logo-face logo-front"><span class="logo-letter">K</span></div>
+                    <div class="logo-face logo-back"><span class="logo-letter">K</span></div>
                 </div>
             </div>
             
@@ -961,7 +947,6 @@
             
             <div class="alert-msg" id="alertMessage"></div>
             
-            <!-- Login -->
             <div id="loginFormArea">
                 <div class="form-group">
                     <label>📧 Email</label>
@@ -979,30 +964,17 @@
                 </button>
             </div>
             
-            <!-- Registro -->
             <div id="registerFormArea" style="display:none;">
-                <div class="form-group">
-                    <label>👤 Nome</label>
-                    <input type="text" class="form-input" id="regNome" placeholder="Seu nome completo">
-                </div>
-                <div class="form-group">
-                    <label>📧 Email</label>
-                    <input type="email" class="form-input" id="regEmail" placeholder="seu@email.com">
-                </div>
-                <div class="form-group">
-                    <label>🔒 Senha (mín. 6 caracteres)</label>
-                    <input type="password" class="form-input" id="regPassword" placeholder="••••••••">
-                </div>
-                <button class="btn-login" onclick="criarConta()" id="regBtn">
-                    <i class="fas fa-user-plus"></i> CRIAR CONTA
-                </button>
+                <div class="form-group"><label>👤 Nome</label><input type="text" class="form-input" id="regNome" placeholder="Seu nome"></div>
+                <div class="form-group"><label>📧 Email</label><input type="email" class="form-input" id="regEmail" placeholder="seu@email.com"></div>
+                <div class="form-group"><label>🔒 Senha</label><input type="password" class="form-input" id="regPassword" placeholder="Mínimo 6 caracteres"></div>
+                <button class="btn-login" onclick="criarConta()" id="regBtn"><i class="fas fa-user-plus"></i> CRIAR CONTA</button>
             </div>
             
             <div class="divider"><span>ou</span></div>
             
             <button class="btn-google" onclick="loginComGoogle()">
-                <img src="https://www.google.com/favicon.ico" alt="G">
-                Entrar com Google
+                <img src="https://www.google.com/favicon.ico" alt="G"> Entrar com Google
             </button>
             
             <p class="register-link">
@@ -1012,19 +984,14 @@
         </div>
     </div>
 
-    <!-- ==================== SISTEMA ==================== -->
+    <!-- SISTEMA -->
     <div class="system-wrapper" id="systemWrapper">
-        
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
                 <div class="kronos-logo-small">
                     <div class="logo-inner">
-                        <div class="logo-face logo-front">
-                            <span class="logo-letter">K</span>
-                        </div>
-                        <div class="logo-face logo-back">
-                            <span class="logo-letter">K</span>
-                        </div>
+                        <div class="logo-face logo-front"><span class="logo-letter">K</span></div>
+                        <div class="logo-face logo-back"><span class="logo-letter">K</span></div>
                     </div>
                 </div>
                 <h2>KRONOS</h2>
@@ -1033,201 +1000,73 @@
             
             <nav>
                 <div class="nav-label">Principal</div>
-                <div class="nav-item active" onclick="navigateTo('dashboard')">
-                    <i class="fas fa-chart-pie"></i> Dashboard
-                </div>
-                <div class="nav-item" onclick="navigateTo('clientes')">
-                    <i class="fas fa-users"></i> Clientes
-                </div>
+                <div class="nav-item active" onclick="navigateTo('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</div>
+                <div class="nav-item" onclick="navigateTo('clientes')"><i class="fas fa-users"></i> Clientes</div>
                 
                 <div class="nav-label">Google Drive</div>
-                <div class="nav-item" onclick="navigateTo('drive')">
-                    <i class="fab fa-google-drive"></i> Meu Drive
-                    <span class="drive-dot dot-off" id="driveDot"></span>
-                </div>
+                <div class="nav-item" onclick="navigateTo('drive')"><i class="fab fa-google-drive"></i> Meu Drive <span class="drive-dot dot-off" id="driveDot"></span></div>
                 
                 <div class="nav-label">Ferramentas</div>
-                <div class="nav-item" onclick="navigateTo('importar')">
-                    <i class="fas fa-cloud-upload-alt"></i> Importar
-                </div>
-                <div class="nav-item" onclick="navigateTo('relatorios')">
-                    <i class="fas fa-file-pdf"></i> Relatórios
-                </div>
-                <div class="nav-item" onclick="navigateTo('backup')">
-                    <i class="fas fa-shield-alt"></i> Backup
-                </div>
+                <div class="nav-item" onclick="navigateTo('importar')"><i class="fas fa-cloud-upload-alt"></i> Importar</div>
+                <div class="nav-item" onclick="navigateTo('relatorios')"><i class="fas fa-file-pdf"></i> Relatórios</div>
+                <div class="nav-item" onclick="navigateTo('backup')"><i class="fas fa-shield-alt"></i> Backup</div>
             </nav>
             
             <div class="user-profile">
                 <div class="user-avatar" id="userAvatar">U</div>
-                <div class="user-info">
-                    <div class="name" id="userName">Usuário</div>
-                    <div class="email" id="userEmail">email</div>
-                </div>
+                <div class="user-info"><div class="name" id="userName">Usuário</div><div class="email" id="userEmail">email</div></div>
                 <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
             </div>
         </aside>
         
         <main class="main-content">
-            
             <!-- DASHBOARD -->
             <div class="page active" id="dashboard">
-                <div class="top-bar">
-                    <h1>📊 Dashboard</h1>
-                    <button class="btn btn-outline btn-sm" onclick="atualizarTudo()">
-                        <i class="fas fa-sync-alt"></i> Atualizar
-                    </button>
-                </div>
-                
+                <div class="top-bar"><h1>📊 Dashboard</h1><button class="btn btn-outline btn-sm" onclick="atualizarTudo()"><i class="fas fa-sync-alt"></i> Atualizar</button></div>
                 <div class="stats-row">
-                    <div class="stat-card" onclick="navigateTo('clientes')">
-                        <div class="icon icon-gold"><i class="fas fa-building"></i></div>
-                        <div class="value" id="totalClientes">0</div>
-                        <div class="label">Total Clientes</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="icon icon-green"><i class="fas fa-check-circle"></i></div>
-                        <div class="value" id="clientesAtivos">0</div>
-                        <div class="label">Ativos</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="icon icon-red"><i class="fas fa-times-circle"></i></div>
-                        <div class="value" id="clientesInativos">0</div>
-                        <div class="label">Inativos</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="icon icon-blue"><i class="fab fa-google-drive"></i></div>
-                        <div class="value" id="driveFileCount">0</div>
-                        <div class="label">Arquivos Drive</div>
-                    </div>
+                    <div class="stat-card" onclick="navigateTo('clientes')"><div class="icon icon-gold"><i class="fas fa-building"></i></div><div class="value" id="totalClientes">0</div><div class="label">Total Clientes</div></div>
+                    <div class="stat-card"><div class="icon icon-green"><i class="fas fa-check-circle"></i></div><div class="value" id="clientesAtivos">0</div><div class="label">Ativos</div></div>
+                    <div class="stat-card"><div class="icon icon-red"><i class="fas fa-times-circle"></i></div><div class="value" id="clientesInativos">0</div><div class="label">Inativos</div></div>
+                    <div class="stat-card"><div class="icon icon-blue"><i class="fab fa-google-drive"></i></div><div class="value" id="driveFileCount">0</div><div class="label">Arquivos Drive</div></div>
                 </div>
-                
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-                    <div class="drive-panel">
-                        <h3>📈 Distribuição</h3>
-                        <canvas id="statusChart" height="200"></canvas>
-                    </div>
-                    <div class="drive-panel">
-                        <h3>🕐 Últimos Clientes</h3>
-                        <div id="recentClients"></div>
-                    </div>
+                    <div class="drive-panel"><h3>📈 Distribuição</h3><canvas id="statusChart" height="200"></canvas></div>
+                    <div class="drive-panel"><h3>🕐 Últimos Clientes</h3><div id="recentClients"></div></div>
                 </div>
             </div>
             
             <!-- CLIENTES -->
             <div class="page" id="clientes">
-                <div class="top-bar">
-                    <h1>👥 Clientes</h1>
-                    <div style="display:flex; gap:8px;">
-                        <button class="btn btn-primary btn-sm" onclick="abrirModalCliente()"><i class="fas fa-plus"></i> Novo</button>
-                        <button class="btn btn-google btn-sm" onclick="navigateTo('drive')"><i class="fab fa-google-drive"></i> Drive</button>
-                        <button class="btn btn-outline btn-sm" onclick="gerarPDF()"><i class="fas fa-file-pdf"></i> PDF</button>
-                    </div>
-                </div>
-                
+                <div class="top-bar"><h1>👥 Clientes</h1><div style="display:flex; gap:8px;"><button class="btn btn-primary btn-sm" onclick="abrirModalCliente()"><i class="fas fa-plus"></i> Novo</button><button class="btn btn-google btn-sm" onclick="navigateTo('drive')"><i class="fab fa-google-drive"></i> Drive</button><button class="btn btn-outline btn-sm" onclick="gerarPDF()"><i class="fas fa-file-pdf"></i> PDF</button></div></div>
                 <div class="table-container">
-                    <div class="table-header">
-                        <input type="text" id="searchCliente" placeholder="🔍 Buscar..." onkeyup="filtrar()">
-                        <select id="filterStatus" onchange="filtrar()">
-                            <option value="todos">Todos</option>
-                            <option value="ativo">Ativos</option>
-                            <option value="inativo">Inativos</option>
-                        </select>
-                    </div>
-                    <table class="data-table">
-                        <thead>
-                            <tr><th>Cliente</th><th>Email</th><th>Telefone</th><th>Status</th><th>Origem</th><th>Ações</th></tr>
-                        </thead>
-                        <tbody id="tabelaClientes"></tbody>
-                    </table>
+                    <div class="table-header"><input type="text" id="searchCliente" placeholder="🔍 Buscar..." onkeyup="filtrar()"><select id="filterStatus" onchange="filtrar()"><option value="todos">Todos</option><option value="ativo">Ativos</option><option value="inativo">Inativos</option></select></div>
+                    <table class="data-table"><thead><tr><th>Cliente</th><th>Email</th><th>Telefone</th><th>Status</th><th>Origem</th><th>Ações</th></tr></thead><tbody id="tabelaClientes"></tbody></table>
                 </div>
             </div>
             
             <!-- GOOGLE DRIVE -->
             <div class="page" id="drive">
-                <div class="top-bar">
-                    <h1>📁 Google Drive</h1>
-                    <div style="display:flex; gap:8px;">
-                        <button class="btn btn-google btn-sm" onclick="conectarDrive()">
-                            <i class="fab fa-google"></i> Conectar Drive
-                        </button>
-                        <button class="btn btn-outline btn-sm" onclick="listarArquivosDrive()">
-                            <i class="fas fa-sync-alt"></i> Atualizar
-                        </button>
-                    </div>
-                </div>
-                
+                <div class="top-bar"><h1>📁 Google Drive</h1><div style="display:flex; gap:8px;"><button class="btn btn-google btn-sm" onclick="conectarDrive()"><i class="fab fa-google"></i> Conectar Drive</button><button class="btn btn-outline btn-sm" onclick="listarArquivosDrive()"><i class="fas fa-sync-alt"></i> Atualizar</button></div></div>
                 <div class="drive-panel">
                     <h3><i class="fab fa-google-drive"></i> Arquivos do Drive</h3>
-                    
                     <div class="drive-connect-area" id="driveConnectArea">
                         <i class="fab fa-google-drive" style="font-size:4em; color:var(--text-muted); margin-bottom:15px; display:block;"></i>
                         <h3>Conecte seu Google Drive</h3>
                         <p style="color:var(--text-muted); margin:10px 0 20px;">Clique no botão para acessar seus arquivos</p>
-                        <button class="btn btn-google" onclick="conectarDrive()">
-                            <i class="fab fa-google"></i> Conectar Google Drive
-                        </button>
+                        <button class="btn btn-google" onclick="conectarDrive()"><i class="fab fa-google"></i> Conectar Google Drive</button>
                     </div>
-                    
                     <div class="drive-files" id="driveFilesList" style="display:none;"></div>
                 </div>
             </div>
             
-            <!-- IMPORTAR / RELATÓRIOS / BACKUP (simplificados) -->
-            <div class="page" id="importar">
-                <div class="top-bar"><h1>📥 Importar</h1></div>
-                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px;">
-                    <div class="drive-panel" style="text-align:center;">
-                        <i class="fab fa-google-drive" style="font-size:3em; color:var(--google-blue);"></i>
-                        <h3 style="margin:15px 0;">Google Drive</h3>
-                        <button class="btn btn-google" onclick="navigateTo('drive')">Abrir Drive</button>
-                    </div>
-                    <div class="drive-panel" style="text-align:center;">
-                        <i class="fas fa-file-upload" style="font-size:3em; color:var(--accent);"></i>
-                        <h3 style="margin:15px 0;">Arquivo CSV</h3>
-                        <input type="file" id="localFile" accept=".csv" style="display:none;" onchange="importarLocal(event)">
-                        <button class="btn btn-primary" onclick="document.getElementById('localFile').click()">Selecionar</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="page" id="relatorios">
-                <div class="top-bar"><h1>📄 Relatórios</h1></div>
-                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px;">
-                    <div class="drive-panel" style="text-align:center;">
-                        <i class="fas fa-file-pdf" style="font-size:3em; color:var(--danger);"></i>
-                        <h3 style="margin:15px 0;">Relatório Completo</h3>
-                        <button class="btn btn-primary" onclick="gerarPDF()">Gerar PDF</button>
-                    </div>
-                    <div class="drive-panel" style="text-align:center;">
-                        <i class="fas fa-chart-bar" style="font-size:3em; color:var(--info);"></i>
-                        <h3 style="margin:15px 0;">Balancete</h3>
-                        <button class="btn btn-primary" onclick="gerarBalancete()">Gerar PDF</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="page" id="backup">
-                <div class="top-bar"><h1>💾 Backup</h1></div>
-                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px;">
-                    <div class="drive-panel" style="text-align:center;">
-                        <i class="fas fa-download" style="font-size:3em; color:var(--accent);"></i>
-                        <h3 style="margin:15px 0;">Download</h3>
-                        <button class="btn btn-primary" onclick="baixarBackup()">Baixar JSON</button>
-                    </div>
-                    <div class="drive-panel" style="text-align:center;">
-                        <i class="fas fa-upload" style="font-size:3em; color:var(--success);"></i>
-                        <h3 style="margin:15px 0;">Restaurar</h3>
-                        <input type="file" id="restoreFile" accept=".json" style="display:none;" onchange="restaurarBackup(event)">
-                        <button class="btn btn-primary" onclick="document.getElementById('restoreFile').click()">Restaurar</button>
-                    </div>
-                </div>
-            </div>
-            
+            <!-- IMPORTAR / RELATÓRIOS / BACKUP -->
+            <div class="page" id="importar"><div class="top-bar"><h1>📥 Importar</h1></div><div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px;"><div class="drive-panel" style="text-align:center;"><i class="fab fa-google-drive" style="font-size:3em; color:var(--google-blue);"></i><h3 style="margin:15px 0;">Google Drive</h3><button class="btn btn-google" onclick="navigateTo('drive')">Abrir Drive</button></div><div class="drive-panel" style="text-align:center;"><i class="fas fa-file-upload" style="font-size:3em; color:var(--accent);"></i><h3 style="margin:15px 0;">Arquivo CSV</h3><input type="file" id="localFile" accept=".csv" style="display:none;" onchange="importarLocal(event)"><button class="btn btn-primary" onclick="document.getElementById('localFile').click()">Selecionar</button></div></div></div>
+            <div class="page" id="relatorios"><div class="top-bar"><h1>📄 Relatórios</h1></div><div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px;"><div class="drive-panel" style="text-align:center;"><i class="fas fa-file-pdf" style="font-size:3em; color:var(--danger);"></i><h3 style="margin:15px 0;">Relatório Completo</h3><button class="btn btn-primary" onclick="gerarPDF()">Gerar PDF</button></div><div class="drive-panel" style="text-align:center;"><i class="fas fa-chart-bar" style="font-size:3em; color:var(--info);"></i><h3 style="margin:15px 0;">Balancete</h3><button class="btn btn-primary" onclick="gerarBalancete()">Gerar PDF</button></div></div></div>
+            <div class="page" id="backup"><div class="top-bar"><h1>💾 Backup</h1></div><div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px;"><div class="drive-panel" style="text-align:center;"><i class="fas fa-download" style="font-size:3em; color:var(--accent);"></i><h3 style="margin:15px 0;">Download</h3><button class="btn btn-primary" onclick="baixarBackup()">Baixar JSON</button></div><div class="drive-panel" style="text-align:center;"><i class="fas fa-upload" style="font-size:3em; color:var(--success);"></i><h3 style="margin:15px 0;">Restaurar</h3><input type="file" id="restoreFile" accept=".json" style="display:none;" onchange="restaurarBackup(event)"><button class="btn btn-primary" onclick="document.getElementById('restoreFile').click()">Restaurar</button></div></div></div>
         </main>
     </div>
     
-    <!-- Modal -->
+    <!-- Modal Cliente -->
     <div class="modal-overlay" id="clienteModal">
         <div class="modal">
             <h2 id="modalTitle">Novo Cliente</h2>
@@ -1238,10 +1077,7 @@
                 <div class="form-group"><label>Telefone *</label><input type="tel" id="clienteTelefone" required></div>
                 <div class="form-group"><label>Empresa</label><input type="text" id="clienteEmpresa"></div>
                 <div class="form-group"><label>Status</label><select id="clienteStatus"><option value="ativo">Ativo</option><option value="inativo">Inativo</option></select></div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-outline" onclick="fecharModal()">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                </div>
+                <div class="modal-actions"><button type="button" class="btn btn-outline" onclick="fecharModal()">Cancelar</button><button type="submit" class="btn btn-primary">Salvar</button></div>
             </form>
         </div>
     </div>
@@ -1249,7 +1085,7 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        // ==================== FIREBASE ====================
+        // ==================== CONFIGURAÇÕES ====================
         const firebaseConfig = {
             apiKey: "AIzaSyBUX_CQmgl62l5zdHjMM9umjWvBTqg8liA",
             authDomain: "kronos-pi.firebaseapp.com",
@@ -1258,6 +1094,9 @@
             messagingSenderId: "1010262223400",
             appId: "1:1010262223400:web:710a5eaa3e260c772de31d"
         };
+        
+        // ✅ SEU CLIENT ID DO GOOGLE
+        const GOOGLE_CLIENT_ID = '978790114604-hid26ivgnuqgk2padqtlejctku5mm7vg.apps.googleusercontent.com';
         
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
@@ -1296,12 +1135,8 @@
                 document.getElementById('userName').textContent = data.nome || user.email?.split('@')[0] || 'Usuário';
                 document.getElementById('userEmail').textContent = user.email;
                 
-                // Verificar token Drive salvo
                 const saved = localStorage.getItem(`drive_${user.uid}`);
-                if (saved) {
-                    googleToken = saved;
-                    updateDriveUI(true);
-                }
+                if (saved) { googleToken = saved; updateDriveUI(true); }
                 
                 carregarClientes();
                 atualizarDashboard();
@@ -1332,55 +1167,38 @@
             const email = document.getElementById('loginEmail').value.trim();
             const pass = document.getElementById('loginPassword').value;
             if (!email || !pass) return showAlert('Preencha todos os campos', 'error');
-            
             const btn = document.getElementById('loginBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
-            
-            try {
-                await auth.signInWithEmailAndPassword(email, pass);
-            } catch (e) {
-                showAlert('Email ou senha incorretos', 'error');
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> ENTRAR';
-            }
+            btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
+            try { await auth.signInWithEmailAndPassword(email, pass); }
+            catch (e) { showAlert('Email ou senha incorretos', 'error'); btn.disabled = false; btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> ENTRAR'; }
         }
         
         async function criarConta() {
             const nome = document.getElementById('regNome').value.trim();
             const email = document.getElementById('regEmail').value.trim();
             const pass = document.getElementById('regPassword').value;
-            
             if (!nome || !email || !pass) return showAlert('Preencha todos os campos', 'error');
             if (pass.length < 6) return showAlert('Senha: mínimo 6 caracteres', 'error');
-            
             const btn = document.getElementById('regBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Criando...';
-            
+            btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Criando...';
             try {
                 const result = await auth.createUserWithEmailAndPassword(email, pass);
                 await result.user.updateProfile({ displayName: nome });
-                await db.collection('usuarios').doc(result.user.uid).set({
-                    nome, email,
-                    criadoEm: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                await db.collection('usuarios').doc(result.user.uid).set({ nome, email, criadoEm: firebase.firestore.FieldValue.serverTimestamp() });
                 showAlert('Conta criada! Faça login.', 'success');
                 setTimeout(() => { toggleForm(); btn.disabled = false; btn.innerHTML = '<i class="fas fa-user-plus"></i> CRIAR CONTA'; }, 1500);
             } catch (e) {
                 showAlert(e.code === 'auth/email-already-in-use' ? 'Email já cadastrado' : 'Erro ao criar conta', 'error');
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-user-plus"></i> CRIAR CONTA';
+                btn.disabled = false; btn.innerHTML = '<i class="fas fa-user-plus"></i> CRIAR CONTA';
             }
         }
         
         async function loginComGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
             provider.addScope('https://www.googleapis.com/auth/drive.readonly');
-            
+            provider.setCustomParameters({ prompt: 'select_account' });
             try {
                 const result = await auth.signInWithPopup(provider);
-                // Pegar token do Google Drive
                 const credential = firebase.auth.GoogleAuthProvider.credentialFromResult(result);
                 if (credential && credential.accessToken) {
                     googleToken = credential.accessToken;
@@ -1388,62 +1206,31 @@
                     updateDriveUI(true);
                 }
                 showToast('Login com Google realizado!', 'success');
-            } catch (e) {
-                console.error('Erro Google Login:', e);
-                if (e.code === 'auth/popup-closed-by-user') {
-                    showAlert('Login cancelado', 'error');
-                } else {
-                    showAlert('Erro ao fazer login com Google. Tente novamente.', 'error');
-                }
-            }
+            } catch (e) { console.error(e); showAlert('Erro ao logar com Google', 'error'); }
         }
         
-        function logout() {
-            localStorage.removeItem(`drive_${currentUser?.uid}`);
-            googleToken = null;
-            auth.signOut();
-        }
+        function logout() { localStorage.removeItem(`drive_${currentUser?.uid}`); googleToken = null; auth.signOut(); }
         
-        // ==================== GOOGLE DRIVE (CORRIGIDO) ====================
+        // ==================== GOOGLE DRIVE ====================
         async function conectarDrive() {
             if (!currentUser) return showToast('Faça login primeiro', 'error');
-            
             const provider = new firebase.auth.GoogleAuthProvider();
             provider.addScope('https://www.googleapis.com/auth/drive.readonly');
-            
+            provider.setCustomParameters({ prompt: 'select_account' });
             try {
-                // Tenta reconectar com permissões do Drive
                 const result = await currentUser.reauthenticateWithPopup(provider);
                 const credential = firebase.auth.GoogleAuthProvider.credentialFromResult(result);
-                
                 if (credential && credential.accessToken) {
                     googleToken = credential.accessToken;
                     localStorage.setItem(`drive_${currentUser.uid}`, googleToken);
                     updateDriveUI(true);
                     listarArquivosDrive();
                     showToast('Google Drive conectado!', 'success');
-                } else {
-                    // Se não tiver credential, tenta login normal
-                    await auth.signOut();
-                    const newResult = await auth.signInWithPopup(provider);
-                    const newCredential = firebase.auth.GoogleAuthProvider.credentialFromResult(newResult);
-                    if (newCredential && newCredential.accessToken) {
-                        googleToken = newCredential.accessToken;
-                        localStorage.setItem(`drive_${newResult.user.uid}`, googleToken);
-                        updateDriveUI(true);
-                        listarArquivosDrive();
-                        showToast('Google Drive conectado!', 'success');
-                    }
                 }
             } catch (e) {
-                console.error('Erro Drive:', e);
-                if (e.code === 'auth/popup-closed-by-user') {
-                    showToast('Operação cancelada', 'info');
-                } else if (e.code === 'auth/requires-recent-login') {
-                    showToast('Faça logout e login novamente para conectar o Drive', 'error');
-                } else {
-                    showToast('Erro ao conectar Drive: ' + (e.message || 'Tente novamente'), 'error');
-                }
+                console.error(e);
+                if (e.code === 'auth/popup-closed-by-user') showToast('Operação cancelada', 'info');
+                else showToast('Erro ao conectar Drive', 'error');
             }
         }
         
@@ -1451,17 +1238,9 @@
             const dot = document.getElementById('driveDot');
             const area = document.getElementById('driveConnectArea');
             const list = document.getElementById('driveFilesList');
-            
             if (connected) {
                 dot.className = 'drive-dot dot-on';
-                if (area) {
-                    area.classList.add('connected');
-                    area.innerHTML = `
-                        <i class="fas fa-check-circle" style="font-size:3em; color:var(--success); margin-bottom:15px; display:block;"></i>
-                        <h3>Drive Conectado!</h3>
-                        <p style="color:var(--text-muted);">Clique em "Atualizar" para ver seus arquivos</p>
-                    `;
-                }
+                if (area) { area.classList.add('connected'); area.innerHTML = '<i class="fas fa-check-circle" style="font-size:3em; color:var(--success); margin-bottom:15px; display:block;"></i><h3>Drive Conectado!</h3><p style="color:var(--text-muted);">Clique em "Atualizar" para ver seus arquivos</p>'; }
                 if (list) list.style.display = 'block';
             } else {
                 dot.className = 'drive-dot dot-off';
@@ -1470,119 +1249,45 @@
         }
         
         async function listarArquivosDrive() {
-            if (!googleToken) {
-                showToast('Conecte o Google Drive primeiro', 'info');
-                return;
-            }
-            
+            if (!googleToken) return showToast('Conecte o Drive primeiro', 'info');
             const list = document.getElementById('driveFilesList');
             list.style.display = 'block';
-            list.innerHTML = '<p style="text-align:center; padding:30px;"><i class="fas fa-spinner fa-spin"></i> Carregando arquivos...</p>';
-            
+            list.innerHTML = '<p style="text-align:center; padding:30px;"><i class="fas fa-spinner fa-spin"></i> Carregando...</p>';
             try {
-                const res = await fetch(
-                    'https://www.googleapis.com/drive/v3/files?pageSize=50&fields=files(id,name,mimeType,size,modifiedTime)&orderBy=modifiedTime%20desc&q=mimeType%3D%27text%2Fcsv%27%20or%20mimeType%3D%27application%2Fvnd.google-apps.spreadsheet%27',
-                    { headers: { Authorization: `Bearer ${googleToken}` } }
-                );
-                
-                if (!res.ok) {
-                    if (res.status === 401) {
-                        googleToken = null;
-                        localStorage.removeItem(`drive_${currentUser?.uid}`);
-                        updateDriveUI(false);
-                        throw new Error('Token expirado. Reconecte o Drive.');
-                    }
-                    throw new Error('Erro ao acessar Drive');
-                }
-                
+                const res = await fetch('https://www.googleapis.com/drive/v3/files?pageSize=50&fields=files(id,name,mimeType,size,modifiedTime)&orderBy=modifiedTime%20desc&q=mimeType%3D%27text%2Fcsv%27%20or%20mimeType%3D%27application%2Fvnd.google-apps.spreadsheet%27', { headers: { Authorization: `Bearer ${googleToken}` } });
+                if (!res.ok) { if (res.status === 401) { googleToken = null; localStorage.removeItem(`drive_${currentUser?.uid}`); updateDriveUI(false); throw new Error('Token expirado. Reconecte.'); } throw new Error('Erro ao acessar Drive'); }
                 const data = await res.json();
                 const files = data.files || [];
-                
                 document.getElementById('driveFileCount').textContent = files.length;
-                
-                if (files.length === 0) {
-                    list.innerHTML = '<p style="text-align:center; padding:40px; color:var(--text-muted);">Nenhum arquivo CSV/Planilha encontrado</p>';
-                    return;
-                }
-                
-                list.innerHTML = files.map(f => {
-                    const isSheet = f.mimeType.includes('spreadsheet');
-                    return `
-                        <div class="drive-file" onclick="importarDoDrive('${f.id}', '${f.name.replace(/'/g, "\\'")}', '${f.mimeType}')">
-                            <div class="file-icon ${isSheet ? 'sheet' : 'csv'}"><i class="fas ${isSheet ? 'fa-file-excel' : 'fa-file-csv'}"></i></div>
-                            <div class="file-info">
-                                <div class="name">${f.name}</div>
-                                <div class="meta">${f.size ? (f.size/1024).toFixed(1)+' KB' : 'Planilha'} • ${new Date(f.modifiedTime).toLocaleDateString('pt-BR')}</div>
-                            </div>
-                            <button class="btn btn-google btn-sm"><i class="fas fa-download"></i> Importar</button>
-                        </div>
-                    `;
-                }).join('');
-                
-            } catch (e) {
-                console.error(e);
-                list.innerHTML = `<p style="text-align:center; padding:40px; color:var(--danger);">${e.message || 'Erro ao carregar arquivos'}</p>`;
-                showToast(e.message || 'Erro ao carregar Drive', 'error');
-            }
+                if (files.length === 0) { list.innerHTML = '<p style="text-align:center; padding:40px; color:var(--text-muted);">Nenhum arquivo encontrado</p>'; return; }
+                list.innerHTML = files.map(f => { const isSheet = f.mimeType.includes('spreadsheet'); return `<div class="drive-file" onclick="importarDoDrive('${f.id}', '${f.name.replace(/'/g, "\\'")}', '${f.mimeType}')"><div class="file-icon ${isSheet?'sheet':'csv'}"><i class="fas ${isSheet?'fa-file-excel':'fa-file-csv'}"></i></div><div class="file-info"><div class="name">${f.name}</div><div class="meta">${f.size?(f.size/1024).toFixed(1)+' KB':'Planilha'} • ${new Date(f.modifiedTime).toLocaleDateString('pt-BR')}</div></div><button class="btn btn-google btn-sm"><i class="fas fa-download"></i> Importar</button></div>`; }).join('');
+            } catch (e) { list.innerHTML = `<p style="text-align:center; padding:40px; color:var(--danger);">${e.message}</p>`; showToast(e.message, 'error'); }
         }
         
         async function importarDoDrive(id, name, mime) {
             showToast(`Importando ${name}...`, 'info');
             try {
                 let content;
-                if (mime === 'application/vnd.google-apps.spreadsheet') {
-                    const res = await fetch(`https://www.googleapis.com/drive/v3/files/${id}/export?mimeType=text/csv`,
-                        { headers: { Authorization: `Bearer ${googleToken}` } });
-                    content = await res.text();
-                } else {
-                    const res = await fetch(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`,
-                        { headers: { Authorization: `Bearer ${googleToken}` } });
-                    content = await res.text();
-                }
-                
+                if (mime === 'application/vnd.google-apps.spreadsheet') { const res = await fetch(`https://www.googleapis.com/drive/v3/files/${id}/export?mimeType=text/csv`, { headers: { Authorization: `Bearer ${googleToken}` } }); content = await res.text(); }
+                else { const res = await fetch(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`, { headers: { Authorization: `Bearer ${googleToken}` } }); content = await res.text(); }
                 const result = Papa.parse(content, { header: true, skipEmptyLines: true });
-                if (result.data.length > 0) {
-                    await importarDados(result.data, `Drive: ${name}`);
-                    showToast(`${result.data.length} clientes importados!`, 'success');
-                } else {
-                    showToast('Nenhum dado encontrado', 'info');
-                }
-            } catch (e) {
-                console.error(e);
-                showToast('Erro ao importar arquivo', 'error');
-            }
+                if (result.data.length > 0) { await importarDados(result.data, `Drive: ${name}`); showToast(`${result.data.length} clientes importados!`, 'success'); }
+                else showToast('Nenhum dado encontrado', 'info');
+            } catch (e) { showToast('Erro ao importar', 'error'); }
         }
         
-        // ==================== IMPORTAÇÃO LOCAL ====================
+        // ==================== IMPORTAÇÃO ====================
         function importarLocal(event) {
             const file = event.target.files[0];
             if (!file) return;
-            Papa.parse(file, {
-                header: true, skipEmptyLines: true,
-                complete: async (r) => {
-                    if (r.data.length > 0) {
-                        await importarDados(r.data, `Upload: ${file.name}`);
-                        showToast(`${r.data.length} clientes importados!`, 'success');
-                    }
-                    event.target.value = '';
-                }
-            });
+            Papa.parse(file, { header: true, skipEmptyLines: true, complete: async (r) => { if (r.data.length > 0) { await importarDados(r.data, `Upload: ${file.name}`); showToast(`${r.data.length} clientes importados!`, 'success'); } event.target.value = ''; } });
         }
         
         async function importarDados(dados, origem) {
             const batch = db.batch();
             let count = 0;
             for (const item of dados) {
-                const ref = db.collection('clientes').doc();
-                batch.set(ref, {
-                    nome: item.nome || item.Nome || item.name || Object.values(item)[0] || 'Sem nome',
-                    email: item.email || item.Email || '',
-                    telefone: item.telefone || item.Telefone || item.tel || '',
-                    empresa: item.empresa || item.Empresa || '',
-                    status: (item.status || item.Status || 'ativo').toLowerCase() === 'inativo' ? 'inativo' : 'ativo',
-                    origem, cadastradoPor: currentUser?.email,
-                    dataCadastro: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                batch.set(db.collection('clientes').doc(), { nome: item.nome || item.Nome || item.name || Object.values(item)[0] || 'Sem nome', email: item.email || item.Email || '', telefone: item.telefone || item.Telefone || item.tel || '', empresa: item.empresa || item.Empresa || '', status: (item.status || item.Status || 'ativo').toLowerCase() === 'inativo' ? 'inativo' : 'ativo', origem, cadastradoPor: currentUser?.email, dataCadastro: firebase.firestore.FieldValue.serverTimestamp() });
                 count++;
                 if (count % 400 === 0) await batch.commit();
             }
@@ -1592,47 +1297,17 @@
         }
         
         // ==================== CLIENTES ====================
-        async function carregarClientes() {
-            const snap = await db.collection('clientes').orderBy('dataCadastro', 'desc').get();
-            todosClientes = [];
-            snap.forEach(d => todosClientes.push({ id: d.id, ...d.data() }));
-            exibirClientes(todosClientes);
-        }
+        async function carregarClientes() { const snap = await db.collection('clientes').orderBy('dataCadastro', 'desc').get(); todosClientes = []; snap.forEach(d => todosClientes.push({ id: d.id, ...d.data() })); exibirClientes(todosClientes); }
         
         function exibirClientes(clientes) {
             const tbody = document.getElementById('tabelaClientes');
-            if (clientes.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:40px; color:var(--text-muted);">Nenhum cliente</td></tr>';
-                return;
-            }
-            tbody.innerHTML = clientes.map(c => `
-                <tr>
-                    <td><strong>${c.nome}</strong></td>
-                    <td>${c.email||'-'}</td>
-                    <td>${c.telefone||'-'}</td>
-                    <td><span class="status-badge ${c.status==='ativo'?'status-active':'status-inactive'}">${c.status}</span></td>
-                    <td style="font-size:0.75em; color:var(--text-muted);">${c.origem||'Manual'}</td>
-                    <td>
-                        <button class="btn btn-outline btn-sm" onclick="editarCliente('${c.id}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-danger btn-sm" onclick="deletarCliente('${c.id}')"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
+            if (clientes.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:40px;">Nenhum cliente</td></tr>'; return; }
+            tbody.innerHTML = clientes.map(c => `<tr><td><strong>${c.nome}</strong></td><td>${c.email||'-'}</td><td>${c.telefone||'-'}</td><td><span class="status-badge ${c.status==='ativo'?'status-active':'status-inactive'}">${c.status}</span></td><td style="font-size:0.75em; color:var(--text-muted);">${c.origem||'Manual'}</td><td><button class="btn btn-outline btn-sm" onclick="editarCliente('${c.id}')"><i class="fas fa-edit"></i></button> <button class="btn btn-danger btn-sm" onclick="deletarCliente('${c.id}')"><i class="fas fa-trash"></i></button></td></tr>`).join('');
         }
         
         function abrirModalCliente(c = null) {
-            document.getElementById('clienteForm').reset();
-            document.getElementById('clienteId').value = '';
-            document.getElementById('modalTitle').textContent = 'Novo Cliente';
-            if (c) {
-                document.getElementById('clienteId').value = c.id;
-                document.getElementById('clienteNome').value = c.nome||'';
-                document.getElementById('clienteEmail').value = c.email||'';
-                document.getElementById('clienteTelefone').value = c.telefone||'';
-                document.getElementById('clienteEmpresa').value = c.empresa||'';
-                document.getElementById('clienteStatus').value = c.status||'ativo';
-                document.getElementById('modalTitle').textContent = 'Editar Cliente';
-            }
+            document.getElementById('clienteForm').reset(); document.getElementById('clienteId').value = ''; document.getElementById('modalTitle').textContent = 'Novo Cliente';
+            if (c) { document.getElementById('clienteId').value = c.id; document.getElementById('clienteNome').value = c.nome||''; document.getElementById('clienteEmail').value = c.email||''; document.getElementById('clienteTelefone').value = c.telefone||''; document.getElementById('clienteEmpresa').value = c.empresa||''; document.getElementById('clienteStatus').value = c.status||'ativo'; document.getElementById('modalTitle').textContent = 'Editar Cliente'; }
             document.getElementById('clienteModal').classList.add('active');
         }
         
@@ -1641,163 +1316,47 @@
         async function salvarCliente(e) {
             e.preventDefault();
             const id = document.getElementById('clienteId').value;
-            const dados = {
-                nome: document.getElementById('clienteNome').value,
-                email: document.getElementById('clienteEmail').value,
-                telefone: document.getElementById('clienteTelefone').value,
-                empresa: document.getElementById('clienteEmpresa').value,
-                status: document.getElementById('clienteStatus').value
-            };
+            const dados = { nome: document.getElementById('clienteNome').value, email: document.getElementById('clienteEmail').value, telefone: document.getElementById('clienteTelefone').value, empresa: document.getElementById('clienteEmpresa').value, status: document.getElementById('clienteStatus').value };
             try {
-                if (id) {
-                    await db.collection('clientes').doc(id).update(dados);
-                } else {
-                    dados.dataCadastro = firebase.firestore.FieldValue.serverTimestamp();
-                    dados.cadastradoPor = currentUser?.email;
-                    await db.collection('clientes').add(dados);
-                }
-                fecharModal();
-                carregarClientes();
-                atualizarDashboard();
+                if (id) { await db.collection('clientes').doc(id).update(dados); }
+                else { dados.dataCadastro = firebase.firestore.FieldValue.serverTimestamp(); dados.cadastradoPor = currentUser?.email; await db.collection('clientes').add(dados); }
+                fecharModal(); carregarClientes(); atualizarDashboard();
                 showToast(id ? 'Atualizado!' : 'Cadastrado!', 'success');
             } catch (err) { showToast('Erro', 'error'); }
         }
         
         function editarCliente(id) { const c = todosClientes.find(x => x.id === id); if (c) abrirModalCliente(c); }
         
-        async function deletarCliente(id) {
-            if (confirm('Excluir?')) {
-                await db.collection('clientes').doc(id).delete();
-                carregarClientes();
-                atualizarDashboard();
-                showToast('Excluído!', 'success');
-            }
-        }
+        async function deletarCliente(id) { if (confirm('Excluir?')) { await db.collection('clientes').doc(id).delete(); carregarClientes(); atualizarDashboard(); showToast('Excluído!', 'success'); } }
         
-        function filtrar() {
-            const b = document.getElementById('searchCliente').value.toLowerCase();
-            const s = document.getElementById('filterStatus').value;
-            let f = todosClientes;
-            if (b) f = f.filter(c => (c.nome||'').toLowerCase().includes(b) || (c.email||'').toLowerCase().includes(b));
-            if (s !== 'todos') f = f.filter(c => c.status === s);
-            exibirClientes(f);
-        }
+        function filtrar() { const b = document.getElementById('searchCliente').value.toLowerCase(), s = document.getElementById('filterStatus').value; let f = todosClientes; if (b) f = f.filter(c => (c.nome||'').toLowerCase().includes(b) || (c.email||'').toLowerCase().includes(b)); if (s !== 'todos') f = f.filter(c => c.status === s); exibirClientes(f); }
         
         // ==================== DASHBOARD ====================
         async function atualizarDashboard() {
-            const t = todosClientes.length;
-            const a = todosClientes.filter(c => c.status === 'ativo').length;
-            const i = t - a;
-            document.getElementById('totalClientes').textContent = t;
-            document.getElementById('clientesAtivos').textContent = a;
-            document.getElementById('clientesInativos').textContent = i;
-            
+            const t = todosClientes.length, a = todosClientes.filter(c => c.status === 'ativo').length, i = t - a;
+            document.getElementById('totalClientes').textContent = t; document.getElementById('clientesAtivos').textContent = a; document.getElementById('clientesInativos').textContent = i;
             const ctx = document.getElementById('statusChart')?.getContext('2d');
-            if (ctx) {
-                if (window.chart) window.chart.destroy();
-                window.chart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Ativos', 'Inativos'],
-                        datasets: [{ data: [a, i], backgroundColor: ['rgba(0,200,83,0.6)', 'rgba(255,23,68,0.6)'], borderWidth: 2 }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#a0a3b1' } } } }
-                });
-            }
-            
-            document.getElementById('recentClients').innerHTML = todosClientes.slice(0,5).map(c => `
-                <div style="padding:10px 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between;">
-                    <span>${c.nome}</span>
-                    <span class="status-badge ${c.status==='ativo'?'status-active':'status-inactive'}">${c.status}</span>
-                </div>
-            `).join('') || '<p style="color:var(--text-muted); text-align:center; padding:20px;">Nenhum cliente</p>';
+            if (ctx) { if (window.chart) window.chart.destroy(); window.chart = new Chart(ctx, { type: 'doughnut', data: { labels: ['Ativos', 'Inativos'], datasets: [{ data: [a, i], backgroundColor: ['rgba(0,200,83,0.6)', 'rgba(255,23,68,0.6)'], borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#a0a3b1' } } } } }); }
+            document.getElementById('recentClients').innerHTML = todosClientes.slice(0,5).map(c => `<div style="padding:10px 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between;"><span>${c.nome}</span><span class="status-badge ${c.status==='ativo'?'status-active':'status-inactive'}">${c.status}</span></div>`).join('') || '<p style="color:var(--text-muted); text-align:center; padding:20px;">Nenhum cliente</p>';
         }
         
         // ==================== RELATÓRIOS ====================
-        function gerarPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.text('Kronos-PI - Relatório', 14, 20);
-            doc.autoTable({ startY: 30, head: [['Nome','Email','Telefone','Status']], body: todosClientes.map(c => [c.nome,c.email,c.telefone,c.status]) });
-            doc.save(`kronos-${new Date().toISOString().split('T')[0]}.pdf`);
-            showToast('PDF gerado!', 'success');
-        }
-        
-        function gerarBalancete() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            const a = todosClientes.filter(c => c.status==='ativo').length;
-            doc.text('Kronos-PI - Balancete', 14, 20);
-            doc.text(`Total: ${todosClientes.length} | Ativos: ${a} | Inativos: ${todosClientes.length - a}`, 14, 40);
-            doc.save(`balancete-${new Date().toISOString().split('T')[0]}.pdf`);
-            showToast('Balancete gerado!', 'success');
-        }
+        function gerarPDF() { const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.text('Kronos-PI - Relatório', 14, 20); doc.autoTable({ startY: 30, head: [['Nome','Email','Telefone','Status']], body: todosClientes.map(c => [c.nome,c.email,c.telefone,c.status]) }); doc.save(`kronos-${new Date().toISOString().split('T')[0]}.pdf`); showToast('PDF gerado!', 'success'); }
+        function gerarBalancete() { const { jsPDF } = window.jspdf; const doc = new jsPDF(); const a = todosClientes.filter(c => c.status==='ativo').length; doc.text('Kronos-PI - Balancete', 14, 20); doc.text(`Total: ${todosClientes.length} | Ativos: ${a} | Inativos: ${todosClientes.length - a}`, 14, 40); doc.save(`balancete-${new Date().toISOString().split('T')[0]}.pdf`); showToast('Balancete gerado!', 'success'); }
         
         // ==================== BACKUP ====================
-        function baixarBackup() {
-            const b = { data: new Date().toISOString(), clientes: todosClientes };
-            const blob = new Blob([JSON.stringify(b)], { type: 'application/json' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `kronos-backup-${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-            showToast('Backup baixado!', 'success');
-        }
-        
-        async function restaurarBackup(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                try {
-                    const backup = JSON.parse(e.target.result);
-                    if (backup.clientes && confirm(`Restaurar ${backup.clientes.length} clientes?`)) {
-                        const batch = db.batch();
-                        backup.clientes.forEach(c => batch.set(db.collection('clientes').doc(), c));
-                        await batch.commit();
-                        carregarClientes();
-                        atualizarDashboard();
-                        showToast('Restaurado!', 'success');
-                    }
-                } catch { showToast('Arquivo inválido', 'error'); }
-            };
-            reader.readAsText(file);
-            event.target.value = '';
-        }
+        function baixarBackup() { const b = { data: new Date().toISOString(), clientes: todosClientes }; const blob = new Blob([JSON.stringify(b)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `kronos-backup-${new Date().toISOString().split('T')[0]}.json`; a.click(); showToast('Backup baixado!', 'success'); }
+        async function restaurarBackup(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = async (e) => { try { const backup = JSON.parse(e.target.result); if (backup.clientes && confirm(`Restaurar ${backup.clientes.length} clientes?`)) { const batch = db.batch(); backup.clientes.forEach(c => batch.set(db.collection('clientes').doc(), c)); await batch.commit(); carregarClientes(); atualizarDashboard(); showToast('Restaurado!', 'success'); } } catch { showToast('Arquivo inválido', 'error'); } }; reader.readAsText(file); event.target.value = ''; }
         
         // ==================== UTILITÁRIOS ====================
-        function navigateTo(page) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(page)?.classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => {
-                if (n.textContent.toLowerCase().includes(page === 'drive' ? 'drive' : page)) n.classList.add('active');
-            });
-            if (page === 'dashboard') atualizarDashboard();
-            if (page === 'clientes') carregarClientes();
-            if (page === 'drive' && googleToken) listarArquivosDrive();
-        }
-        
+        function navigateTo(page) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.getElementById(page)?.classList.add('active'); document.querySelectorAll('.nav-item').forEach(n => { if (n.textContent.toLowerCase().includes(page === 'drive' ? 'drive' : page)) n.classList.add('active'); }); if (page === 'dashboard') atualizarDashboard(); if (page === 'clientes') carregarClientes(); if (page === 'drive' && googleToken) listarArquivosDrive(); }
         function atualizarTudo() { carregarClientes(); atualizarDashboard(); if (googleToken) listarArquivosDrive(); showToast('Atualizado!', 'success'); }
-        
-        function showToast(msg, type = 'info') {
-            const t = document.createElement('div');
-            t.className = `toast toast-${type}`;
-            t.textContent = msg;
-            document.getElementById('toastContainer').appendChild(t);
-            setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3500);
-        }
-        
-        function showAlert(msg, type) {
-            const a = document.getElementById('alertMessage');
-            a.textContent = msg;
-            a.className = `alert-msg alert-${type}`;
-            setTimeout(() => a.style.display = 'none', 4000);
-        }
-        
+        function showToast(msg, type = 'info') { const t = document.createElement('div'); t.className = `toast toast-${type}`; t.textContent = msg; document.getElementById('toastContainer').appendChild(t); setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3500); }
+        function showAlert(msg, type) { const a = document.getElementById('alertMessage'); a.textContent = msg; a.className = `alert-msg alert-${type}`; setTimeout(() => a.style.display = 'none', 4000); }
         document.addEventListener('click', (e) => { if (e.target.id === 'clienteModal') fecharModal(); });
         
-        console.log('👑 Kronos-PI v2.0 - K girando verticalmente!');
+        console.log('👑 Kronos-PI v2.0 - Pronto para uso!');
+        console.log('🔑 Client ID configurado:', GOOGLE_CLIENT_ID);
     </script>
 </body>
 </html>
