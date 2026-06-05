@@ -1,0 +1,1993 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Gestão de Clientes - Premium</title>
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    
+    <!-- Google API -->
+    <script src="https://apis.google.com/js/api.js"></script>
+    
+    <!-- Bibliotecas -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+    <style>
+        :root {
+            --primary-blue: #1a237e;
+            --secondary-blue: #283593;
+            --accent-gold: #ffd700;
+            --dark-gold: #ffa000;
+            --white: #ffffff;
+            --light-bg: #f5f7fa;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--light-bg);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Premium */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, #0a0a2e 0%, var(--primary-blue) 50%, #0a0a2e 100%);
+            color: var(--white);
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 100;
+            overflow-y: auto;
+            box-shadow: 8px 0 30px rgba(0,0,0,0.3);
+            border-right: 2px solid rgba(255,215,0,0.1);
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--dark-gold), var(--accent-gold));
+        }
+
+        .sidebar-header {
+            text-align: center;
+            padding: 35px 25px;
+            border-bottom: 2px solid rgba(255,215,0,0.2);
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .logo-icon {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, var(--accent-gold), #ff8f00);
+            border-radius: 25px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 45px;
+            color: var(--primary-blue);
+            box-shadow: 0 10px 30px rgba(255,215,0,0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 10px 30px rgba(255,215,0,0.4); }
+            50% { box-shadow: 0 15px 40px rgba(255,215,0,0.6); }
+        }
+
+        .sidebar-header h2 {
+            color: var(--accent-gold);
+            font-size: 1.4em;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .sidebar-header .subtitle {
+            color: #aaa;
+            font-size: 0.75em;
+            margin-top: 8px;
+            letter-spacing: 1px;
+        }
+
+        .nav-section {
+            padding: 0 15px;
+        }
+
+        .nav-section-title {
+            color: #666;
+            font-size: 0.7em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 10px 20px;
+            margin-top: 15px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px;
+            color: #bbb;
+            text-decoration: none;
+            margin: 3px 0;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: var(--accent-gold);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item i {
+            margin-right: 15px;
+            width: 22px;
+            font-size: 1.1em;
+            text-align: center;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,215,0,0.1);
+            color: var(--accent-gold);
+            transform: translateX(5px);
+        }
+
+        .nav-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,160,0,0.2));
+            color: var(--accent-gold);
+            font-weight: 700;
+            border: 1px solid rgba(255,215,0,0.3);
+        }
+
+        .nav-item.active::before {
+            transform: scaleY(1);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 30px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+        }
+
+        .page {
+            display: none;
+            animation: fadeSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-header {
+            background: white;
+            padding: 25px 35px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 6px solid var(--accent-gold);
+        }
+
+        .page-header h1 {
+            color: var(--primary-blue);
+            font-size: 2em;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* Botões Premium */
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue), #283593);
+            color: white;
+            box-shadow: 0 6px 20px rgba(26,35,126,0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--accent-gold), var(--dark-gold));
+            color: var(--primary-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255,215,0,0.4);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--accent-gold), var(--dark-gold));
+            color: var(--primary-blue);
+            box-shadow: 0 6px 20px rgba(255,215,0,0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #43a047, #2e7d32);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e53935, #c62828);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #039be5, #01579b);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.8em;
+            border-radius: 10px;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .stat-icon {
+            width: 75px;
+            height: 75px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 25px;
+            font-size: 2em;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-icon.blue { background: linear-gradient(135deg, #1a237e, #283593); }
+        .stat-icon.gold { background: linear-gradient(135deg, #ffd700, #ff8f00); }
+        .stat-icon.green { background: linear-gradient(135deg, #43a047, #2e7d32); }
+        .stat-icon.red { background: linear-gradient(135deg, #e53935, #c62828); }
+
+        .stat-info h3 {
+            color: #666;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            color: #1a237e;
+            font-size: 2.5em;
+            font-weight: 900;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+
+        .card {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .card h3 {
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h3 i {
+            color: var(--accent-gold);
+        }
+
+        /* Tabela */
+        .table-container {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table thead th {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            padding: 18px;
+            text-align: left;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85em;
+        }
+
+        .data-table tbody td {
+            padding: 18px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .data-table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background: #f8f9ff;
+            transform: scale(1.005);
+        }
+
+        .status-badge {
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-size: 0.85em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-ativo {
+            background: linear-gradient(135deg, #c8e6c9, #a5d6a7);
+            color: #1b5e20;
+            border: 2px solid #4caf50;
+        }
+
+        .status-inativo {
+            background: linear-gradient(135deg, #ffcdd2, #ef9a9a);
+            color: #b71c1c;
+            border: 2px solid #f44336;
+        }
+
+        /* Modal Premium */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 3% auto;
+            padding: 40px;
+            border-radius: 25px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.5);
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close {
+            color: #999;
+            float: right;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close:hover {
+            color: #333;
+            background: #f0f0f0;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 4px rgba(255,215,0,0.1);
+        }
+
+        /* Drive Upload Area */
+        .upload-area {
+            border: 3px dashed #ccc;
+            border-radius: 20px;
+            padding: 50px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent-gold);
+            background: #fffdf0;
+        }
+
+        .upload-area i {
+            font-size: 4em;
+            color: #ccc;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover i {
+            color: var(--accent-gold);
+        }
+
+        /* Alert */
+        .alert {
+            padding: 18px 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            font-weight: 600;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #c8e6c9, #a5d6a7);
+            color: #1b5e20;
+            border: 2px solid #4caf50;
+        }
+
+        .alert-error {
+            background: linear-gradient(135deg, #ffcdd2, #ef9a9a);
+            color: #b71c1c;
+            border: 2px solid #f44336;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #b3e5fc, #81d4fa);
+            color: #01579b;
+            border: 2px solid #039be5;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 18px 30px;
+            border-radius: 15px;
+            color: white;
+            font-weight: 700;
+            z-index: 9999;
+            animation: slideInRight 0.3s ease;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .toast-success { background: linear-gradient(135deg, #43a047, #2e7d32); }
+        .toast-error { background: linear-gradient(135deg, #e53935, #c62828); }
+        .toast-info { background: linear-gradient(135deg, #039be5, #01579b); }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .stats-grid, .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 200;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-icon">
+                <i class="fas fa-crown"></i>
+            </div>
+            <h2>ClientPro</h2>
+            <div class="subtitle">SISTEMA DE GESTÃO</div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Principal</div>
+            <a class="nav-item active" onclick="navigateTo('dashboard')">
+                <i class="fas fa-chart-pie"></i> Dashboard
+            </a>
+            <a class="nav-item" onclick="navigateTo('clientes')">
+                <i class="fas fa-users"></i> Clientes
+            </a>
+            <a class="nav-item" onclick="navigateTo('drive')">
+                <i class="fab fa-google-drive"></i> Google Drive
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Ferramentas</div>
+            <a class="nav-item" onclick="navigateTo('relatorios')">
+                <i class="fas fa-file-pdf"></i> Relatórios
+            </a>
+            <a class="nav-item" onclick="navigateTo('backup')">
+                <i class="fas fa-cloud"></i> Backup
+            </a>
+            <a class="nav-item" onclick="navigateTo('integracoes')">
+                <i class="fas fa-plug"></i> Integrações
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        
+        <!-- Dashboard Page -->
+        <section id="dashboard" class="page active">
+            <div class="page-header">
+                <h1>📊 Dashboard</h1>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="atualizarDashboard()">
+                        <i class="fas fa-sync-alt"></i> Atualizar
+                    </button>
+                    <button class="btn btn-gold" onclick="exportarDashboardPDF()">
+                        <i class="fas fa-download"></i> Exportar
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card" onclick="navigateTo('clientes')">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Total de Clientes</h3>
+                        <div class="stat-value" id="totalClientes">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon gold">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Clientes Ativos</h3>
+                        <div class="stat-value" id="clientesAtivos">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon red">
+                        <i class="fas fa-user-slash"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Clientes Inativos</h3>
+                        <div class="stat-value" id="clientesInativos">0</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Taxa de Atividade</h3>
+                        <div class="stat-value" id="taxaAtividade">0%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <h3><i class="fas fa-chart-pie"></i> Distribuição de Status</h3>
+                    <canvas id="statusChart" width="400" height="300"></canvas>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-calendar-alt"></i> Clientes por Mês</h3>
+                    <canvas id="monthlyChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Clientes Page -->
+        <section id="clientes" class="page">
+            <div class="page-header">
+                <h1>👥 Gerenciar Clientes</h1>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="abrirModalCliente()">
+                        <i class="fas fa-plus-circle"></i> Novo Cliente
+                    </button>
+                    <button class="btn btn-info" onclick="document.getElementById('fileUpload').click()">
+                        <i class="fas fa-file-upload"></i> Importar CSV
+                    </button>
+                    <input type="file" id="fileUpload" accept=".csv,.xlsx,.json" style="display:none" onchange="importarArquivo(event)">
+                    <button class="btn btn-gold" onclick="imprimirListaClientes()">
+                        <i class="fas fa-print"></i> Imprimir
+                    </button>
+                </div>
+            </div>
+
+            <div class="filters-bar">
+                <input type="text" id="searchCliente" placeholder="🔍 Buscar por nome, email, empresa..." class="search-input" onkeyup="filtrarClientes()">
+                <select id="filterStatus" class="filter-select" onchange="filtrarClientes()">
+                    <option value="todos">Todos os Status</option>
+                    <option value="ativo">Ativos</option>
+                    <option value="inativo">Inativos</option>
+                </select>
+                <button class="btn btn-primary btn-sm" onclick="filtrarClientes()">
+                    <i class="fas fa-filter"></i> Filtrar
+                </button>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Email</th>
+                            <th>Telefone</th>
+                            <th>Empresa</th>
+                            <th>Status</th>
+                            <th>Data Cadastro</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientesTableBody">
+                        <tr>
+                            <td colspan="7" style="text-align:center; padding:50px;">
+                                <i class="fas fa-spinner fa-spin"></i> Carregando clientes...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Google Drive Page -->
+        <section id="drive" class="page">
+            <div class="page-header">
+                <h1>📁 Google Drive</h1>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="conectarGoogleDrive()">
+                        <i class="fab fa-google"></i> Conectar Drive
+                    </button>
+                    <button class="btn btn-success" onclick="importarDoDrive()">
+                        <i class="fas fa-download"></i> Importar Dados
+                    </button>
+                </div>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <h3><i class="fas fa-cloud-upload-alt"></i> Upload para Drive</h3>
+                    <div class="upload-area" onclick="document.getElementById('driveFileInput').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <h3>Clique para selecionar arquivos</h3>
+                        <p>CSV, Excel, JSON, PDF</p>
+                    </div>
+                    <input type="file" id="driveFileInput" style="display:none" multiple onchange="uploadParaDrive(event)">
+                    <button class="btn btn-primary" style="margin-top:15px; width:100%;" onclick="document.getElementById('driveFileInput').click()">
+                        <i class="fas fa-upload"></i> Enviar Arquivos
+                    </button>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-file-import"></i> Importar do Drive</h3>
+                    <p style="margin-bottom:15px;">Selecione arquivos do Google Drive para importar automaticamente para o sistema.</p>
+                    <div id="driveFilesList" style="max-height:300px; overflow-y:auto;">
+                        <p style="color:#999;">Conecte-se ao Google Drive para ver seus arquivos</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-sync-alt"></i> Sincronização</h3>
+                    <p style="margin-bottom:15px;">Configure a sincronização automática com sua pasta do Google Drive.</p>
+                    <div class="form-group">
+                        <label>Pasta do Drive (URL)</label>
+                        <input type="text" id="driveFolderUrl" placeholder="https://drive.google.com/drive/folders/...">
+                    </div>
+                    <button class="btn btn-success" style="width:100%;" onclick="configurarSync()">
+                        <i class="fas fa-sync"></i> Configurar Sync Automático
+                    </button>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top:25px;">
+                <h3><i class="fas fa-history"></i> Últimas Importações</h3>
+                <div id="importHistory">
+                    <p style="color:#999;">Nenhuma importação realizada</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Relatórios Page -->
+        <section id="relatorios" class="page">
+            <div class="page-header">
+                <h1>📄 Relatórios</h1>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <h3><i class="fas fa-file-pdf"></i> Relatório Completo</h3>
+                    <p>Todos os clientes com detalhes e status</p>
+                    <button class="btn btn-primary" style="width:100%;" onclick="gerarRelatorioCompleto()">
+                        <i class="fas fa-download"></i> Gerar PDF
+                    </button>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-balance-scale"></i> Balancete</h3>
+                    <p>Comparativo detalhado ativos vs inativos</p>
+                    <button class="btn btn-gold" style="width:100%;" onclick="gerarBalancete()">
+                        <i class="fas fa-chart-bar"></i> Gerar Balancete
+                    </button>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-history"></i> Histórico</h3>
+                    <p>Registro de todas as alterações</p>
+                    <button class="btn btn-info" style="width:100%;" onclick="gerarHistorico()">
+                        <i class="fas fa-clock"></i> Ver Histórico
+                    </button>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-file-excel"></i> Exportar Excel</h3>
+                    <p>Download em formato Excel (.xlsx)</p>
+                    <button class="btn btn-success" style="width:100%;" onclick="exportarExcel()">
+                        <i class="fas fa-table"></i> Exportar
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Backup Page -->
+        <section id="backup" class="page">
+            <div class="page-header">
+                <h1>💾 Backup e Restauração</h1>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <h3><i class="fas fa-database"></i> Backup Completo</h3>
+                    <p>Salve todos os dados localmente</p>
+                    <button class="btn btn-primary" style="width:100%;" onclick="realizarBackup()">
+                        <i class="fas fa-download"></i> Fazer Backup
+                    </button>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-undo-alt"></i> Restaurar</h3>
+                    <p>Restaure de um arquivo de backup</p>
+                    <input type="file" id="restoreFileInput" accept=".json" style="display:none" onchange="restaurarBackup(event)">
+                    <button class="btn btn-warning" style="width:100%;" onclick="document.getElementById('restoreFileInput').click()">
+                        <i class="fas fa-upload"></i> Restaurar Backup
+                    </button>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-cloud"></i> Backup na Nuvem</h3>
+                    <p>Envie backup para o Google Drive</p>
+                    <button class="btn btn-info" style="width:100%;" onclick="backupParaNuvem()">
+                        <i class="fas fa-cloud-upload-alt"></i> Backup na Nuvem
+                    </button>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top:25px;">
+                <h3><i class="fas fa-list"></i> Backups Anteriores</h3>
+                <div id="backupsList">
+                    <p style="color:#999;">Nenhum backup encontrado</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Integrações Page -->
+        <section id="integracoes" class="page">
+            <div class="page-header">
+                <h1>🔌 Integrações</h1>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <h3><i class="fab fa-whatsapp"></i> ZapSing</h3>
+                    <p>Conecte com WhatsApp Business API</p>
+                    <div class="form-group">
+                        <label>API Key</label>
+                        <input type="text" id="zapsingKey" placeholder="Sua chave API">
+                    </div>
+                    <button class="btn btn-success" style="width:100%;" onclick="conectarZapsing()">
+                        <i class="fas fa-plug"></i> Conectar
+                    </button>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fab fa-google-drive"></i> Google Drive</h3>
+                    <p>Sincronização bidirecional com Drive</p>
+                    <button class="btn btn-primary" style="width:100%;" onclick="conectarGoogleDrive()">
+                        <i class="fas fa-link"></i> Autorizar
+                    </button>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-envelope"></i> Email</h3>
+                    <p>Envio automático de relatórios</p>
+                    <button class="btn btn-info" style="width:100%;" onclick="configurarEmail()">
+                        <i class="fas fa-cog"></i> Configurar
+                    </button>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-calendar"></i> Google Calendar</h3>
+                    <p>Sincronize com compromissos</p>
+                    <button class="btn btn-gold" style="width:100%;" onclick="conectarCalendar()">
+                        <i class="fas fa-sync"></i> Sincronizar
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal Cliente -->
+    <div id="clienteModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharModal()">&times;</span>
+            <h2 id="modalTitle" style="color: #1a237e; margin-bottom: 25px;">Novo Cliente</h2>
+            <form id="clienteForm" onsubmit="salvarCliente(event)">
+                <input type="hidden" id="clienteId">
+                
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Nome Completo *</label>
+                    <input type="text" id="nome" required placeholder="Nome do cliente">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email *</label>
+                    <input type="email" id="email" required placeholder="email@exemplo.com">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Telefone *</label>
+                    <input type="tel" id="telefone" required placeholder="(00) 00000-0000">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-building"></i> Empresa</label>
+                    <input type="text" id="empresa" placeholder="Nome da empresa">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-venus-mars"></i> Status *</label>
+                    <select id="status" required>
+                        <option value="ativo">🟢 Ativo</option>
+                        <option value="inativo">🔴 Inativo</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-sticky-note"></i> Observações</label>
+                    <textarea id="observacoes" rows="4" placeholder="Observações sobre o cliente..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width:100%;">
+                    <i class="fas fa-save"></i> Salvar Cliente
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+
+    <script>
+        // ==================== CONFIGURAÇÃO FIREBASE ====================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBqL0LxXXXXXX-XXXXX",
+            authDomain: "clientpro-XXXXX.firebaseapp.com",
+            projectId: "clientpro-XXXXX",
+            storageBucket: "clientpro-XXXXX.appspot.com",
+            messagingSenderId: "XXXXXXXXXX",
+            appId: "1:XXXXXXXXXX:web:XXXXXXXXXXXXXXXX"
+        };
+
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // ==================== VARIÁVEIS GLOBAIS ====================
+        let todosClientes = [];
+        let googleDriveConnected = false;
+        let googleAccessToken = null;
+        let statusChart = null;
+        let monthlyChart = null;
+
+        // ==================== NAVEGAÇÃO ====================
+        function navigateTo(pageName) {
+            // Esconder todas as páginas
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Mostrar página selecionada
+            const page = document.getElementById(pageName);
+            if (page) {
+                page.classList.add('active');
+            }
+            
+            // Atualizar navegação
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.nav-item').classList.add('active');
+            
+            // Fechar sidebar mobile
+            document.getElementById('sidebar').classList.remove('mobile-open');
+            
+            // Atualizar conteúdo específico
+            if (pageName === 'dashboard') atualizarDashboard();
+            if (pageName === 'clientes') carregarClientes();
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('mobile-open');
+        }
+
+        // ==================== TOAST NOTIFICATIONS ====================
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'times-circle' : 'info-circle'}"></i> ${message}`;
+            document.getElementById('toastContainer').appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideInRight 0.3s ease reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // ==================== MODAL ====================
+        function abrirModalCliente(cliente = null) {
+            const modal = document.getElementById('clienteModal');
+            const title = document.getElementById('modalTitle');
+            const form = document.getElementById('clienteForm');
+            
+            form.reset();
+            
+            if (cliente) {
+                title.textContent = 'Editar Cliente';
+                document.getElementById('clienteId').value = cliente.id;
+                document.getElementById('nome').value = cliente.nome;
+                document.getElementById('email').value = cliente.email;
+                document.getElementById('telefone').value = cliente.telefone;
+                document.getElementById('empresa').value = cliente.empresa || '';
+                document.getElementById('status').value = cliente.status;
+                document.getElementById('observacoes').value = cliente.observacoes || '';
+            } else {
+                title.textContent = 'Novo Cliente';
+                document.getElementById('clienteId').value = '';
+            }
+            
+            modal.style.display = 'block';
+        }
+
+        function fecharModal() {
+            document.getElementById('clienteModal').style.display = 'none';
+        }
+
+        // Fechar modal ao clicar fora
+        window.onclick = function(event) {
+            if (event.target.className === 'modal') {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // ==================== CRUD CLIENTES ====================
+        async function salvarCliente(event) {
+            event.preventDefault();
+            
+            const clienteId = document.getElementById('clienteId').value;
+            const clienteData = {
+                nome: document.getElementById('nome').value,
+                email: document.getElementById('email').value,
+                telefone: document.getElementById('telefone').value,
+                empresa: document.getElementById('empresa').value,
+                status: document.getElementById('status').value,
+                observacoes: document.getElementById('observacoes').value,
+                dataAtualizacao: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            
+            try {
+                if (clienteId) {
+                    // Atualizar
+                    await db.collection('clientes').doc(clienteId).update(clienteData);
+                    showToast('Cliente atualizado com sucesso!', 'success');
+                } else {
+                    // Criar novo
+                    clienteData.dataCadastro = firebase.firestore.FieldValue.serverTimestamp();
+                    await db.collection('clientes').add(clienteData);
+                    showToast('Cliente cadastrado com sucesso!', 'success');
+                }
+                
+                fecharModal();
+                carregarClientes();
+                atualizarDashboard();
+                
+            } catch (error) {
+                console.error('Erro ao salvar:', error);
+                showToast('Erro ao salvar cliente: ' + error.message, 'error');
+            }
+        }
+
+        async function carregarClientes() {
+            try {
+                const snapshot = await db.collection('clientes').orderBy('dataCadastro', 'desc').get();
+                todosClientes = [];
+                
+                snapshot.forEach(doc => {
+                    todosClientes.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+                exibirClientes(todosClientes);
+                
+            } catch (error) {
+                console.error('Erro ao carregar:', error);
+                document.getElementById('clientesTableBody').innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align:center; padding:50px; color:red;">
+                            <i class="fas fa-exclamation-triangle"></i> Erro ao carregar clientes
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function exibirClientes(clientes) {
+            const tbody = document.getElementById('clientesTableBody');
+            
+            if (clientes.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align:center; padding:50px; color:#999;">
+                            <i class="fas fa-inbox fa-3x"></i>
+                            <p style="margin-top:15px;">Nenhum cliente encontrado</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = clientes.map(cliente => `
+                <tr>
+                    <td>
+                        <strong>${cliente.nome}</strong>
+                        ${cliente.observacoes ? `<br><small style="color:#999;">${cliente.observacoes.substring(0, 50)}...</small>` : ''}
+                    </td>
+                    <td>${cliente.email}</td>
+                    <td>${cliente.telefone}</td>
+                    <td>${cliente.empresa || '-'}</td>
+                    <td>
+                        <span class="status-badge status-${cliente.status}">
+                            ${cliente.status === 'ativo' ? '🟢 Ativo' : '🔴 Inativo'}
+                        </span>
+                    </td>
+                    <td>${cliente.dataCadastro ? new Date(cliente.dataCadastro.toDate()).toLocaleDateString('pt-BR') : '-'}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn btn-edit" onclick="editarCliente('${cliente.id}')" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn btn-delete" onclick="deletarCliente('${cliente.id}')" title="Deletar">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <button class="action-btn btn-view" onclick="verDetalhes('${cliente.id}')" title="Ver Detalhes">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function editarCliente(id) {
+            const cliente = todosClientes.find(c => c.id === id);
+            if (cliente) {
+                abrirModalCliente(cliente);
+            }
+        }
+
+        async function deletarCliente(id) {
+            if (confirm('Tem certeza que deseja excluir este cliente? Esta ação não pode ser desfeita!')) {
+                try {
+                    await db.collection('clientes').doc(id).delete();
+                    showToast('Cliente excluído com sucesso!', 'success');
+                    carregarClientes();
+                    atualizarDashboard();
+                } catch (error) {
+                    showToast('Erro ao excluir cliente: ' + error.message, 'error');
+                }
+            }
+        }
+
+        function verDetalhes(id) {
+            const cliente = todosClientes.find(c => c.id === id);
+            if (cliente) {
+                alert(`
+                    DETALHES DO CLIENTE
+                    ====================
+                    Nome: ${cliente.nome}
+                    Email: ${cliente.email}
+                    Telefone: ${cliente.telefone}
+                    Empresa: ${cliente.empresa || 'N/A'}
+                    Status: ${cliente.status}
+                    Data Cadastro: ${cliente.dataCadastro ? new Date(cliente.dataCadastro.toDate()).toLocaleString('pt-BR') : 'N/A'}
+                    Observações: ${cliente.observacoes || 'Nenhuma'}
+                `);
+            }
+        }
+
+        function filtrarClientes() {
+            const searchTerm = document.getElementById('searchCliente').value.toLowerCase();
+            const statusFilter = document.getElementById('filterStatus').value;
+            
+            let filtrados = todosClientes;
+            
+            if (searchTerm) {
+                filtrados = filtrados.filter(cliente => 
+                    cliente.nome.toLowerCase().includes(searchTerm) ||
+                    cliente.email.toLowerCase().includes(searchTerm) ||
+                    (cliente.empresa && cliente.empresa.toLowerCase().includes(searchTerm)) ||
+                    cliente.telefone.includes(searchTerm)
+                );
+            }
+            
+            if (statusFilter !== 'todos') {
+                filtrados = filtrados.filter(cliente => cliente.status === statusFilter);
+            }
+            
+            exibirClientes(filtrados);
+        }
+
+        // ==================== IMPORTAÇÃO DE ARQUIVOS ====================
+        function importarArquivo(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            
+            reader.onload = async function(e) {
+                try {
+                    let dados = [];
+                    
+                    if (file.name.endsWith('.csv')) {
+                        // Parse CSV
+                        const result = Papa.parse(e.target.result, {
+                            header: true,
+                            skipEmptyLines: true
+                        });
+                        dados = result.data;
+                    } else if (file.name.endsWith('.json')) {
+                        // Parse JSON
+                        dados = JSON.parse(e.target.result);
+                    } else if (file.name.endsWith('.xlsx')) {
+                        // Parse Excel
+                        const workbook = XLSX.read(e.target.result, { type: 'binary' });
+                        const sheetName = workbook.SheetNames[0];
+                        dados = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+                    }
+                    
+                    if (dados.length > 0) {
+                        await importarDados(dados);
+                    }
+                    
+                } catch (error) {
+                    showToast('Erro ao processar arquivo: ' + error.message, 'error');
+                }
+            };
+            
+            if (file.name.endsWith('.xlsx')) {
+                reader.readAsBinaryString(file);
+            } else {
+                reader.readAsText(file);
+            }
+        }
+
+        async function importarDados(dados) {
+            const batch = db.batch();
+            let importados = 0;
+            
+            for (const item of dados) {
+                const clienteData = {
+                    nome: item.nome || item.Nome || item.name || 'Sem nome',
+                    email: item.email || item.Email || '',
+                    telefone: item.telefone || item.Telefone || item.phone || '',
+                    empresa: item.empresa || item.Empresa || item.company || '',
+                    status: (item.status || item.Status || 'ativo').toLowerCase(),
+                    observacoes: item.observacoes || item.Observacoes || item.notes || '',
+                    dataCadastro: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                const docRef = db.collection('clientes').doc();
+                batch.set(docRef, clienteData);
+                importados++;
+                
+                // Firestore limita batches a 500 operações
+                if (importados % 400 === 0) {
+                    await batch.commit();
+                }
+            }
+            
+            await batch.commit();
+            showToast(`${importados} clientes importados com sucesso!`, 'success');
+            carregarClientes();
+            atualizarDashboard();
+            
+            // Limpar input
+            document.getElementById('fileUpload').value = '';
+        }
+
+        // ==================== GOOGLE DRIVE INTEGRATION ====================
+        const GOOGLE_CLIENT_ID = 'SEU_CLIENT_ID.apps.googleusercontent.com';
+        const GOOGLE_API_KEY = 'SUA_API_KEY';
+        const SCOPES = 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.readonly';
+
+        function conectarGoogleDrive() {
+            // Inicializar Google API
+            gapi.load('client:auth2', async () => {
+                try {
+                    await gapi.client.init({
+                        apiKey: GOOGLE_API_KEY,
+                        clientId: GOOGLE_CLIENT_ID,
+                        scope: SCOPES,
+                    });
+                    
+                    const authInstance = gapi.auth2.getAuthInstance();
+                    
+                    if (!authInstance.isSignedIn.get()) {
+                        await authInstance.signIn();
+                    }
+                    
+                    googleAccessToken = authInstance.currentUser.get().getAuthResponse().access_token;
+                    googleDriveConnected = true;
+                    
+                    showToast('Conectado ao Google Drive com sucesso!', 'success');
+                    listarArquivosDrive();
+                    
+                } catch (error) {
+                    console.error('Erro ao conectar Google Drive:', error);
+                    showToast('Erro ao conectar: ' + error.message, 'error');
+                }
+            });
+        }
+
+        async function listarArquivosDrive() {
+            if (!googleDriveConnected) {
+                showToast('Conecte-se ao Google Drive primeiro', 'info');
+                return;
+            }
+            
+            try {
+                const response = await fetch('https://www.googleapis.com/drive/v3/files?pageSize=20&fields=files(id,name,mimeType,createdTime)', {
+                    headers: {
+                        'Authorization': `Bearer ${googleAccessToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                const filesList = document.getElementById('driveFilesList');
+                
+                if (data.files && data.files.length > 0) {
+                    filesList.innerHTML = data.files.map(file => `
+                        <div style="padding:12px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <i class="fas fa-${file.mimeType.includes('spreadsheet') ? 'file-excel' : 'file'}" style="margin-right:10px; color:#666;"></i>
+                                ${file.name}
+                                <br><small style="color:#999;">${new Date(file.createdTime).toLocaleDateString('pt-BR')}</small>
+                            </div>
+                            <button class="btn btn-primary btn-sm" onclick="importarDoDrivePorId('${file.id}')">
+                                <i class="fas fa-download"></i> Importar
+                            </button>
+                        </div>
+                    `).join('');
+                } else {
+                    filesList.innerHTML = '<p style="color:#999;">Nenhum arquivo encontrado</p>';
+                }
+                
+            } catch (error) {
+                console.error('Erro ao listar arquivos:', error);
+            }
+        }
+
+        async function importarDoDrive() {
+            if (!googleDriveConnected) {
+                conectarGoogleDrive();
+                return;
+            }
+            listarArquivosDrive();
+        }
+
+        async function importarDoDrivePorId(fileId) {
+            try {
+                const response = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
+                    headers: {
+                        'Authorization': `Bearer ${googleAccessToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (Array.isArray(data)) {
+                    await importarDados(data);
+                } else if (data.clientes) {
+                    await importarDados(data.clientes);
+                } else {
+                    await importarDados([data]);
+                }
+                
+                // Salvar no histórico de importações
+                document.getElementById('importHistory').innerHTML = `
+                    <div style="padding:10px; background:#e8f5e9; border-radius:10px; margin-top:10px;">
+                        <i class="fas fa-check-circle" style="color:green;"></i>
+                        Importado do Drive em ${new Date().toLocaleString('pt-BR')}
+                    </div>
+                    ${document.getElementById('importHistory').innerHTML}
+                `;
+                
+            } catch (error) {
+                showToast('Erro ao importar do Drive: ' + error.message, 'error');
+            }
+        }
+
+        async function uploadParaDrive(event) {
+            const files = event.target.files;
+            if (!files.length || !googleDriveConnected) return;
+            
+            for (const file of files) {
+                const formData = new FormData();
+                formData.append('metadata', new Blob([JSON.stringify({
+                    name: file.name,
+                    mimeType: file.type
+                })], { type: 'application/json' }));
+                formData.append('file', file);
+                
+                try {
+                    await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${googleAccessToken}`
+                        },
+                        body: formData
+                    });
+                } catch (error) {
+                    console.error('Erro ao enviar arquivo:', error);
+                }
+            }
+            
+            showToast('Arquivos enviados para o Drive!', 'success');
+            listarArquivosDrive();
+        }
+
+        async function configurarSync() {
+            const folderUrl = document.getElementById('driveFolderUrl').value;
+            if (!folderUrl) {
+                showToast('Insira a URL da pasta do Drive', 'info');
+                return;
+            }
+            
+            // Extrair ID da pasta
+            const folderId = folderUrl.match(/[-\w]{25,}/);
+            if (!folderId) {
+                showToast('URL inválida', 'error');
+                return;
+            }
+            
+            localStorage.setItem('driveFolderId', folderId[0]);
+            showToast('Sincronização configurada! Os arquivos serão importados automaticamente.', 'success');
+        }
+
+        // ==================== DASHBOARD ====================
+        async function atualizarDashboard() {
+            try {
+                const snapshot = await db.collection('clientes').get();
+                const clientes = [];
+                
+                snapshot.forEach(doc => {
+                    clientes.push({ id: doc.id, ...doc.data() });
+                });
+                
+                const total = clientes.length;
+                const ativos = clientes.filter(c => c.status === 'ativo').length;
+                const inativos = clientes.filter(c => c.status === 'inativo').length;
+                const taxaAtividade = total > 0 ? ((ativos / total) * 100).toFixed(1) : 0;
+                
+                document.getElementById('totalClientes').textContent = total;
+                document.getElementById('clientesAtivos').textContent = ativos;
+                document.getElementById('clientesInativos').textContent = inativos;
+                document.getElementById('taxaAtividade').textContent = taxaAtividade + '%';
+                
+                // Atualizar gráficos
+                atualizarGraficos(ativos, inativos);
+                
+            } catch (error) {
+                console.error('Erro ao atualizar dashboard:', error);
+            }
+        }
+
+        function atualizarGraficos(ativos, inativos) {
+            const ctx1 = document.getElementById('statusChart').getContext('2d');
+            const ctx2 = document.getElementById('monthlyChart').getContext('2d');
+            
+            // Destruir gráficos existentes
+            if (statusChart) statusChart.destroy();
+            if (monthlyChart) monthlyChart.destroy();
+            
+            // Gráfico de Status
+            statusChart = new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Ativos', 'Inativos'],
+                    datasets: [{
+                        data: [ativos, inativos],
+                        backgroundColor: [
+                            'rgba(40, 167, 69, 0.8)',
+                            'rgba(220, 53, 69, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(40, 167, 69, 1)',
+                            'rgba(220, 53, 69, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico Mensal (dados simulados)
+            const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
+            monthlyChart = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: meses,
+                    datasets: [{
+                        label: 'Novos Clientes',
+                        data: [12, 19, 15, 25, 22, 30],
+                        backgroundColor: 'rgba(26, 35, 126, 0.8)',
+                        borderColor: 'rgba(26, 35, 126, 1)',
+                        borderWidth: 2,
+                        borderRadius: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // ==================== RELATÓRIOS ====================
+        function gerarRelatorioCompleto() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            doc.setFontSize(20);
+            doc.setTextColor(26, 35, 126);
+            doc.text('RELATÓRIO COMPLETO DE CLIENTES', 14, 20);
+            
+            doc.setFontSize(10);
+            doc.setTextColor(100);
+            doc.text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, 14, 30);
+            
+            const tableData = todosClientes.map(c => [
+                c.nome,
+                c.email,
+                c.telefone,
+                c.empresa || '-',
+                c.status,
+                c.dataCadastro ? new Date(c.dataCadastro.toDate()).toLocaleDateString('pt-BR') : '-'
+            ]);
+            
+            doc.autoTable({
+                startY: 35,
+                head: [['Nome', 'Email', 'Telefone', 'Empresa', 'Status', 'Data']],
+                body: tableData,
+                theme: 'grid',
+                headStyles: {
+                    fillColor: [26, 35, 126],
+                    textColor: [255, 255, 255],
+                    fontStyle: 'bold'
+                },
+                styles: {
+                    fontSize: 8,
+                    cellPadding: 3
+                }
+            });
+            
+            doc.save(`relatorio-clientes-${new Date().toISOString().split('T')[0]}.pdf`);
+            showToast('Relatório gerado com sucesso!', 'success');
+        }
+
+        function gerarBalancete() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            doc.setFontSize(18);
+            doc.setTextColor(26, 35, 126);
+            doc.text('BALANCETE DE CLIENTES', 14, 20);
+            
+            const ativos = todosClientes.filter(c => c.status === 'ativo').length;
+            const inativos = todosClientes.filter(c => c.status === 'inativo').length;
+            const total = todosClientes.length;
+            
+            doc.setFontSize(12);
+            doc.text(`Total de Clientes: ${total}`, 14, 40);
+            doc.text(`Clientes Ativos: ${ativos} (${((ativos/total)*100).toFixed(1)}%)`, 14, 50);
+            doc.text(`Clientes Inativos: ${inativos} (${((inativos/total)*100).toFixed(1)}%)`, 14, 60);
+            
+            doc.save(`balancete-${new Date().toISOString().split('T')[0]}.pdf`);
+            showToast('Balancete gerado com sucesso!', 'success');
+        }
+
+        function gerarHistorico() {
+            showToast('Funcionalidade em desenvolvimento', 'info');
+        }
+
+        function exportarExcel() {
+            const ws = XLSX.utils.json_to_sheet(todosClientes.map(c => ({
+                Nome: c.nome,
+                Email: c.email,
+                Telefone: c.telefone,
+                Empresa: c.empresa || '',
+                Status: c.status,
+                'Data Cadastro': c.dataCadastro ? new Date(c.dataCadastro.toDate()).toLocaleDateString('pt-BR') : '',
+                Observações: c.observacoes || ''
+            })));
+            
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Clientes');
+            XLSX.writeFile(wb, `clientes-${new Date().toISOString().split('T')[0]}.xlsx`);
+            showToast('Arquivo Excel exportado!', 'success');
+        }
+
+        function imprimirListaClientes() {
+            window.print();
+        }
+
+        function exportarDashboardPDF() {
+            gerarRelatorioCompleto();
+        }
+
+        // ==================== BACKUP ====================
+        async function realizarBackup() {
+            try {
+                const backup = {
+                    data: new Date().toISOString(),
+                    clientes: todosClientes,
+                    total: todosClientes.length
+                };
+                
+                const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `backup-clientes-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                // Salvar referência no localStorage
+                const backups = JSON.parse(localStorage.getItem('backups') || '[]');
+                backups.push({
+                    data: backup.data,
+                    total: backup.total,
+                    arquivo: a.download
+                });
+                localStorage.setItem('backups', JSON.stringify(backups));
+                
+                mostrarBackups();
+                showToast('Backup realizado com sucesso!', 'success');
+                
+            } catch (error) {
+                showToast('Erro ao fazer backup: ' + error.message, 'error');
+            }
+        }
+
+        function restaurarBackup(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const backup = JSON.parse(e.target.result);
+                    
+                    if (backup.clientes && Array.isArray(backup.clientes)) {
+                        if (confirm(`Deseja restaurar ${backup.clientes.length} clientes do backup de ${new Date(backup.data).toLocaleString('pt-BR')}?`)) {
+                            const batch = db.batch();
+                            
+                            // Limpar coleção atual (opcional - comente se quiser manter existentes)
+                            // const snapshot = await db.collection('clientes').get();
+                            // snapshot.forEach(doc => batch.delete(doc.ref));
+                            
+                            // Adicionar clientes do backup
+                            backup.clientes.forEach(cliente => {
+                                const docRef = db.collection('clientes').doc();
+                                batch.set(docRef, {
+                                    ...cliente,
+                                    dataRestauracao: firebase.firestore.FieldValue.serverTimestamp()
+                                });
+                            });
+                            
+                            await batch.commit();
+                            showToast('Backup restaurado com sucesso!', 'success');
+                            carregarClientes();
+                            atualizarDashboard();
+                        }
+                    } else {
+                        showToast('Arquivo de backup inválido', 'error');
+                    }
+                } catch (error) {
+                    showToast('Erro ao restaurar: ' + error.message, 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function mostrarBackups() {
+            const backups = JSON.parse(localStorage.getItem('backups') || '[]');
+            const container = document.getElementById('backupsList');
+            
+            if (backups.length === 0) {
+                container.innerHTML = '<p style="color:#999;">Nenhum backup encontrado</p>';
+                return;
+            }
+            
+            container.innerHTML = backups.map((b, index) => `
+                <div style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <strong><i class="fas fa-file-archive" style="color:#ffd700;"></i> ${b.arquivo}</strong>
+                        <br><small style="color:#999;">${new Date(b.data).toLocaleString('pt-BR')} - ${b.total} clientes</small>
+                    </div>
+                    <button class="btn btn-danger btn-sm" onclick="deletarBackup(${index})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function deletarBackup(index) {
+            const backups = JSON.parse(localStorage.getItem('backups') || '[]');
+            backups.splice(index, 1);
+            localStorage.setItem('backups', JSON.stringify(backups));
+            mostrarBackups();
+            showToast('Backup removido', 'info');
+        }
+
+        async function backupParaNuvem() {
+            if (!googleDriveConnected) {
+                conectarGoogleDrive();
+                return;
+            }
+            
+            const backup = {
+                data: new Date().toISOString(),
+                clientes: todosClientes
+            };
+            
+            const blob = new Blob([JSON.stringify(backup)], { type: 'application/json' });
+            const formData = new FormData();
+            formData.append('metadata', new Blob([JSON.stringify({
+                name: `backup-${new Date().toISOString().split('T')[0]}.json`,
+                mimeType: 'application/json'
+            })], { type: 'application/json' }));
+            formData.append('file', blob);
+            
+            try {
+                await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${googleAccessToken}`
+                    },
+                    body: formData
+                });
+                showToast('Backup enviado para o Drive!', 'success');
+            } catch (error) {
+                showToast('Erro ao enviar backup', 'error');
+            }
+        }
+
+        // ==================== INTEGRAÇÕES ====================
+        function conectarZapsing() {
+            const apiKey = document.getElementById('zapsingKey').value;
+            if (!apiKey) {
+                showToast('Insira a chave API do ZapSing', 'info');
+                return;
+            }
+            localStorage.setItem('zapsingKey', apiKey);
+            showToast('ZapSing conectado com sucesso!', 'success');
+        }
+
+        function configurarEmail() {
+            showToast('Funcionalidade em desenvolvimento', 'info');
+        }
+
+        function conectarCalendar() {
+            showToast('Funcionalidade em desenvolvimento', 'info');
+        }
+
+        // ==================== INICIALIZAÇÃO ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Carregar dados iniciais
+            carregarClientes();
+            atualizarDashboard();
+            mostrarBackups();
+            
+            // Verificar conexão Google Drive
+            const savedToken = localStorage.getItem('googleToken');
+            if (savedToken) {
+                googleAccessToken = savedToken;
+                googleDriveConnected = true;
+            }
+            
+            // Carregar configurações salvas
+            const savedKey = localStorage.getItem('zapsingKey');
+            if (savedKey) {
+                document.getElementById('zapsingKey').value = savedKey;
+            }
+            
+            const savedFolder = localStorage.getItem('driveFolderId');
+            if (savedFolder) {
+                document.getElementById('driveFolderUrl').value = `https://drive.google.com/drive/folders/${savedFolder}`;
+            }
+        });
+
+        // Salvar token quando conectar
+        window.addEventListener('beforeunload', () => {
+            if (googleAccessToken) {
+                localStorage.setItem('googleToken', googleAccessToken);
+            }
+        });
+    </script>
+
+</body>
+</html>
