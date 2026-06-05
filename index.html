@@ -15,6 +15,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     
     <style>
         :root{--primary:#0a0e27;--secondary:#1a1f3a;--accent:#c9a84c;--gold-gradient:linear-gradient(135deg,#c9a84c 0%,#e0c878 50%,#c9a84c 100%);--text:#fff;--text-secondary:#a0a3b1;--text-muted:#6b6e7e;--border:#2a2f45;--card:#141832;--sidebar:260px;--success:#00c853;--danger:#ff1744;--warning:#ff9800;--info:#00b0ff;--purple:#9c27b0;--google:#4285f4}
@@ -37,11 +38,9 @@
         .form-group label{display:block;margin-bottom:5px;color:var(--text-secondary);font-size:.8em;text-transform:uppercase;letter-spacing:1px}
         .form-input{width:100%;padding:14px;background:var(--primary);border:2px solid var(--border);border-radius:12px;color:#fff;font-size:1em;transition:.3s}
         .form-input:focus{outline:none;border-color:var(--accent)}
-        .btn{width:100%;padding:15px;border:none;border-radius:12px;font-size:1em;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:1px;transition:.3s;margin-top:8px}
+        .btn-full{width:100%;padding:15px;border:none;border-radius:12px;font-size:1em;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:1px;transition:.3s;margin-top:8px}
         .btn-gold{background:var(--gold-gradient);color:var(--primary)}
         .btn-gold:hover{transform:translateY(-3px);box-shadow:0 15px 35px rgba(201,168,76,0.4)}
-        .btn-outline{background:transparent;border:2px solid var(--border);color:var(--text-secondary)}
-        .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
         .btn-google{background:#fff;color:#333;display:flex;align-items:center;justify-content:center;gap:10px}
         .btn-google:hover{background:#f1f3f4}
         .divider{display:flex;align-items:center;margin:22px 0;color:var(--text-muted);font-size:.85em}
@@ -68,7 +67,7 @@
         .btn-logout{background:none;border:1px solid var(--border);color:var(--text-secondary);width:30px;height:30px;border-radius:6px;cursor:pointer}
 
         .main-content{margin-left:var(--sidebar);flex:1;padding:30px}
-        .top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+        .top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px}
         .top-bar h1{font-size:2em;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
         .page{display:none}
         .page.active{display:block;animation:fadeIn .4s}
@@ -83,6 +82,7 @@
         .icon-red{background:rgba(255,23,68,.15);color:var(--danger)}
         .icon-orange{background:rgba(255,152,0,.15);color:var(--warning)}
         .icon-purple{background:rgba(156,39,176,.15);color:var(--purple)}
+        .icon-blue{background:rgba(0,176,255,.15);color:var(--info)}
         .stat-card .value{font-size:2.2em;font-weight:800}
         .stat-card .label{color:var(--text-muted);font-size:.75em;text-transform:uppercase;letter-spacing:1px}
 
@@ -91,8 +91,7 @@
         .table-header{padding:15px 20px;border-bottom:1px solid var(--border);display:flex;gap:10px;flex-wrap:wrap;align-items:center}
         .table-header input,.table-header select{padding:10px 14px;background:var(--primary);border:1px solid var(--border);border-radius:8px;color:#fff;font-size:.85em}
         .data-table{width:100%;border-collapse:collapse}
-        .data-table th{background:rgba(201,168,76,.05);padding:14px 15px;text-align:left;color:var(--accent);font-size:.75em;text-transform:uppercase;letter-spacing:1px;cursor:pointer}
-        .data-table th:hover{background:rgba(201,168,76,.1)}
+        .data-table th{background:rgba(201,168,76,.05);padding:14px 15px;text-align:left;color:var(--accent);font-size:.75em;text-transform:uppercase;letter-spacing:1px}
         .data-table td{padding:12px 15px;border-bottom:1px solid var(--border);font-size:.85em}
         .data-table tr:hover{background:rgba(201,168,76,.02)}
         .badge{padding:5px 12px;border-radius:15px;font-size:.73em;font-weight:600;text-transform:uppercase}
@@ -109,8 +108,27 @@
         .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text-secondary)}
         .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
         .btn-danger{background:var(--danger);color:#fff}
+        .btn-success{background:var(--success);color:#fff}
         .btn-sm{padding:6px 12px;font-size:.75em}
         .btn-xs{padding:4px 8px;font-size:.7em}
+
+        .upload-area{border:2px dashed var(--border);border-radius:20px;padding:50px 30px;text-align:center;cursor:pointer;transition:.3s;margin-bottom:20px}
+        .upload-area:hover{border-color:var(--accent);background:rgba(201,168,76,.03)}
+        .upload-area.dragover{border-color:var(--accent);background:rgba(201,168,76,.08)}
+        .upload-area i{font-size:3em;color:var(--text-muted);margin-bottom:15px;display:block}
+        .upload-area h3{margin-bottom:10px}
+        .upload-area p{color:var(--text-muted);font-size:.9em}
+
+        .import-progress{display:none;margin-top:20px}
+        .progress-bar{width:100%;height:8px;background:var(--primary);border-radius:4px;overflow:hidden;margin-bottom:10px}
+        .progress-fill{height:100%;background:var(--gold-gradient);border-radius:4px;transition:width .3s;width:0%}
+        .progress-info{display:flex;justify-content:space-between;color:var(--text-muted);font-size:.85em}
+
+        .file-list{max-height:300px;overflow-y:auto;margin-top:15px}
+        .file-item{display:flex;align-items:center;padding:10px;border-bottom:1px solid var(--border);gap:10px;font-size:.85em}
+        .file-item i{margin-right:8px}
+        .file-item .file-name{flex:1}
+        .file-item .file-status{font-size:.75em}
 
         .modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:1000;align-items:center;justify-content:center}
         .modal-overlay.active{display:flex}
@@ -123,18 +141,18 @@
         .modal textarea{resize:vertical;min-height:60px}
         .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
 
+        .client-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;transition:.3s}
+        .client-card:hover{border-color:var(--accent);transform:translateY(-3px)}
+        .client-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+        .client-card-body{color:var(--text-secondary);font-size:.85em;line-height:1.6}
+        .clients-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:15px}
+
         .toast-container{position:fixed;bottom:20px;right:20px;z-index:9999}
         .toast{padding:14px 22px;border-radius:10px;margin-top:8px;font-weight:600;font-size:.85em;animation:slideIn .3s}
         @keyframes slideIn{from{transform:translateX(100px);opacity:0}to{transform:translateX(0);opacity:1}}
         .toast-success{background:var(--success);color:#fff}
         .toast-error{background:var(--danger);color:#fff}
         .toast-info{background:var(--info);color:#fff}
-
-        .client-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;transition:.3s}
-        .client-card:hover{border-color:var(--accent);transform:translateY(-3px)}
-        .client-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-        .client-card-body{color:var(--text-secondary);font-size:.85em;line-height:1.6}
-        .clients-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:15px}
 
         @media(max-width:768px){.sidebar{display:none}.main-content{margin-left:0}.clients-grid{grid-template-columns:1fr}}
     </style>
@@ -148,28 +166,20 @@
         <h1>KRONOS-PI</h1>
         <p class="sub">Gestão de Clientes</p>
         <div class="alert" id="alertMessage"></div>
-        
-        <!-- LOGIN -->
         <div id="loginFormArea">
             <div class="form-group"><label>📧 Email</label><input type="email" class="form-input" id="loginEmail" placeholder="seu@email.com"></div>
             <div class="form-group"><label>🔒 Senha</label><input type="password" class="form-input" id="loginPassword" placeholder="••••••••"></div>
-            <button class="btn btn-gold" onclick="fazerLogin()">ENTRAR</button>
+            <button class="btn-full btn-gold" onclick="fazerLogin()">ENTRAR</button>
             <div class="divider"><span>ou</span></div>
-            <button class="btn btn-google" onclick="loginGoogle()"><img src="https://www.google.com/favicon.ico" width="18"> Entrar com Google</button>
+            <button class="btn-full btn-google" onclick="loginGoogle()"><img src="https://www.google.com/favicon.ico" width="18"> Entrar com Google</button>
         </div>
-        
-        <!-- REGISTRO -->
         <div id="registerFormArea" style="display:none;">
             <div class="form-group"><label>👤 Nome Completo</label><input type="text" class="form-input" id="regNome" placeholder="Seu nome"></div>
             <div class="form-group"><label>📧 Email</label><input type="email" class="form-input" id="regEmail" placeholder="seu@email.com"></div>
             <div class="form-group"><label>🔒 Senha (mín. 6 caracteres)</label><input type="password" class="form-input" id="regPassword" placeholder="••••••••"></div>
-            <button class="btn btn-gold" onclick="criarConta()">CRIAR CONTA</button>
+            <button class="btn-full btn-gold" onclick="criarConta()">CRIAR CONTA</button>
         </div>
-        
-        <p style="margin-top:20px;color:var(--text-muted);font-size:.9em;">
-            <span id="toggleText">Não tem conta?</span>
-            <span class="link" id="toggleLink" onclick="toggleForm()">Criar conta</span>
-        </p>
+        <p style="margin-top:20px;color:var(--text-muted);font-size:.9em;"><span id="toggleText">Não tem conta?</span> <span class="link" id="toggleLink" onclick="toggleForm()">Criar conta</span></p>
     </div>
 </div>
 
@@ -184,8 +194,10 @@
             <div class="nav-label">Principal</div>
             <div class="nav-item active" onclick="nav('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</div>
             <div class="nav-item" onclick="nav('clientes')"><i class="fas fa-users"></i> Clientes</div>
+            <div class="nav-label">Importação</div>
+            <div class="nav-item" onclick="nav('importar')"><i class="fas fa-folder-open"></i> Importar Pastas</div>
+            <div class="nav-item" onclick="nav('uploadSimples')"><i class="fas fa-upload"></i> Upload CSV</div>
             <div class="nav-label">Ferramentas</div>
-            <div class="nav-item" onclick="nav('importar')"><i class="fas fa-upload"></i> Importar CSV</div>
             <div class="nav-item" onclick="nav('relatorios')"><i class="fas fa-file-pdf"></i> Relatórios</div>
             <div class="nav-item" onclick="nav('backup')"><i class="fas fa-shield-alt"></i> Backup</div>
             <div class="nav-label">Configurações</div>
@@ -203,56 +215,79 @@
         <div class="page active" id="dashboard">
             <div class="top-bar"><h1>📊 Dashboard</h1></div>
             <div class="stats-row" id="dashboardStats"></div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-                <div class="panel"><h3>📈 Distribuição</h3><canvas id="statusChart" height="250"></canvas></div>
-                <div class="panel"><h3>🕐 Últimos Clientes</h3><div id="recentClients"></div></div>
-            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px"><div class="panel"><h3>📈 Distribuição</h3><canvas id="statusChart" height="250"></canvas></div><div class="panel"><h3>🕐 Últimos Clientes</h3><div id="recentClients"></div></div></div>
         </div>
         
         <!-- CLIENTES -->
         <div class="page" id="clientes">
-            <div class="top-bar"><h1>👥 Clientes</h1><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn-action btn-primary btn-sm" onclick="abrirModal()"><i class="fas fa-plus"></i> Novo Cliente</button><button class="btn-action btn-outline btn-sm" onclick="toggleView()"><i class="fas" id="viewIcon"></i> <span id="viewText">Cards</span></button><button class="btn-action btn-outline btn-sm" onclick="document.getElementById('csvInput').click()"><i class="fas fa-file-import"></i> Importar CSV</button><input type="file" id="csvInput" accept=".csv" style="display:none" onchange="importarCSV(event)"><button class="btn-action btn-outline btn-sm" onclick="gerarPDF()"><i class="fas fa-file-pdf"></i> PDF</button></div></div>
-            
+            <div class="top-bar"><h1>👥 Clientes</h1><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn-action btn-primary btn-sm" onclick="abrirModal()"><i class="fas fa-plus"></i> Novo</button><button class="btn-action btn-outline btn-sm" onclick="toggleView()"><i class="fas" id="viewIcon"></i> <span id="viewText">Cards</span></button><button class="btn-action btn-outline btn-sm" onclick="gerarPDF()"><i class="fas fa-file-pdf"></i> PDF</button></div></div>
             <div class="table-header" style="margin-bottom:15px;background:var(--card);border-radius:12px;padding:15px;">
-                <input type="text" id="searchCliente" placeholder="🔍 Buscar por nome, email, telefone..." style="flex:1;min-width:200px;" onkeyup="filtrar()">
-                <select id="filterStatus" onchange="filtrar()"><option value="todos">Todos os Status</option></select>
-                <select id="sortOrder" onchange="filtrar()"><option value="nome-asc">Nome A-Z</option><option value="nome-desc">Nome Z-A</option><option value="data-desc">Mais recentes</option><option value="data-asc">Mais antigos</option></select>
+                <input type="text" id="searchCliente" placeholder="🔍 Buscar..." style="flex:1;min-width:200px;" onkeyup="filtrar()">
+                <select id="filterStatus" onchange="filtrar()"><option value="todos">Todos</option></select>
+                <select id="sortOrder" onchange="filtrar()"><option value="nome-asc">A-Z</option><option value="nome-desc">Z-A</option><option value="data-desc">Recentes</option><option value="data-asc">Antigos</option></select>
             </div>
-            
-            <div class="table-container" id="tableView">
-                <table class="data-table"><thead><tr><th onclick="ordenar('nome')">Cliente <i class="fas fa-sort"></i></th><th>Email</th><th>Telefone</th><th>Empresa</th><th>Status</th><th>Cadastro</th><th>Ações</th></tr></thead><tbody id="tabelaClientes"></tbody></table>
-            </div>
+            <div class="table-container" id="tableView"><table class="data-table"><thead><tr><th>Cliente</th><th>Email</th><th>Telefone</th><th>Empresa</th><th>Status</th><th>Pasta</th><th>Ações</th></tr></thead><tbody id="tabelaClientes"></tbody></table></div>
             <div class="clients-grid" id="cardView" style="display:none;"></div>
         </div>
         
-        <!-- IMPORTAR -->
-        <div class="page" id="importar"><div class="top-bar"><h1>📥 Importar CSV</h1></div><div class="panel" style="text-align:center;max-width:500px;margin:0 auto"><i class="fas fa-file-csv" style="font-size:4em;color:var(--accent);margin-bottom:20px;"></i><h3>Arraste ou selecione um arquivo CSV</h3><p style="color:var(--text-muted);margin:10px 0 20px;">Colunas: nome, email, telefone, empresa, status</p><input type="file" id="localFile" accept=".csv" style="display:none" onchange="importarCSV(event)"><button class="btn-action btn-primary" onclick="document.getElementById('localFile').click()"><i class="fas fa-upload"></i> Selecionar Arquivo</button></div></div>
+        <!-- IMPORTAR PASTAS -->
+        <div class="page" id="importar">
+            <div class="top-bar"><h1>📁 Importar Múltiplas Pastas</h1></div>
+            <div class="panel">
+                <h3>Selecione as pastas com arquivos CSV</h3>
+                <p style="color:var(--text-muted);margin-bottom:20px;">Você pode selecionar várias pastas de uma vez. Todos os arquivos CSV dentro delas serão importados.</p>
+                
+                <div class="upload-area" id="uploadArea" onclick="document.getElementById('folderInput').click()">
+                    <i class="fas fa-folder-plus"></i>
+                    <h3>Clique para selecionar pastas</h3>
+                    <p>ou arraste pastas aqui</p>
+                    <input type="file" id="folderInput" webkitdirectory multiple style="display:none" onchange="processarPastas(event)">
+                </div>
+                
+                <div class="import-progress" id="importProgress">
+                    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                    <div class="progress-info"><span id="progressText">Processando...</span><span id="progressCount">0/0</span></div>
+                </div>
+                
+                <div class="file-list" id="fileList"></div>
+            </div>
+        </div>
+        
+        <!-- UPLOAD SIMPLES -->
+        <div class="page" id="uploadSimples">
+            <div class="top-bar"><h1>📤 Upload de Arquivo CSV</h1></div>
+            <div class="panel" style="text-align:center;max-width:500px;margin:0 auto">
+                <i class="fas fa-file-csv" style="font-size:4em;color:var(--accent);margin-bottom:20px;"></i>
+                <h3>Selecionar Arquivo CSV</h3>
+                <p style="color:var(--text-muted);margin:10px 0 20px;">Importe um arquivo CSV único</p>
+                <input type="file" id="singleFileInput" accept=".csv" style="display:none" onchange="importarCSV(event)">
+                <button class="btn-action btn-primary" onclick="document.getElementById('singleFileInput').click()"><i class="fas fa-upload"></i> Selecionar</button>
+            </div>
+        </div>
         
         <!-- RELATÓRIOS -->
-        <div class="page" id="relatorios"><div class="top-bar"><h1>📄 Relatórios</h1></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px"><div class="panel" style="text-align:center"><i class="fas fa-file-pdf" style="font-size:3em;color:var(--danger)"></i><h3 style="margin:15px 0">Relatório Completo</h3><button class="btn-action btn-primary" onclick="gerarPDF()">Gerar PDF</button></div><div class="panel" style="text-align:center"><i class="fas fa-chart-bar" style="font-size:3em;color:var(--info)"></i><h3 style="margin:15px 0">Balancete</h3><button class="btn-action btn-primary" onclick="gerarBalancete()">Gerar PDF</button></div><div class="panel" style="text-align:center"><i class="fas fa-table" style="font-size:3em;color:var(--success)"></i><h3 style="margin:15px 0">Por Status</h3><button class="btn-action btn-primary" onclick="gerarPorStatus()">Gerar PDF</button></div></div></div>
+        <div class="page" id="relatorios"><div class="top-bar"><h1>📄 Relatórios</h1></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px"><div class="panel" style="text-align:center"><i class="fas fa-file-pdf" style="font-size:3em;color:var(--danger)"></i><h3 style="margin:15px 0">Completo</h3><button class="btn-action btn-primary" onclick="gerarPDF()">Gerar</button></div><div class="panel" style="text-align:center"><i class="fas fa-chart-bar" style="font-size:3em;color:var(--info)"></i><h3 style="margin:15px 0">Balancete</h3><button class="btn-action btn-primary" onclick="gerarBalancete()">Gerar</button></div></div></div>
         
         <!-- BACKUP -->
-        <div class="page" id="backup"><div class="top-bar"><h1>💾 Backup</h1></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px"><div class="panel" style="text-align:center"><i class="fas fa-download" style="font-size:3em;color:var(--accent)"></i><h3 style="margin:15px 0">Download Backup</h3><button class="btn-action btn-primary" onclick="baixarBackup()">Baixar JSON</button></div><div class="panel" style="text-align:center"><i class="fas fa-upload" style="font-size:3em;color:var(--success)"></i><h3 style="margin:15px 0">Restaurar Backup</h3><input type="file" id="restoreFile" accept=".json" style="display:none" onchange="restaurarBackup(event)"><button class="btn-action btn-primary" onclick="document.getElementById('restoreFile').click()">Restaurar</button></div></div></div>
+        <div class="page" id="backup"><div class="top-bar"><h1>💾 Backup</h1></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px"><div class="panel" style="text-align:center"><i class="fas fa-download" style="font-size:3em;color:var(--accent)"></i><h3 style="margin:15px 0">Download</h3><button class="btn-action btn-primary" onclick="baixarBackup()">Baixar</button></div><div class="panel" style="text-align:center"><i class="fas fa-upload" style="font-size:3em;color:var(--success)"></i><h3 style="margin:15px 0">Restaurar</h3><input type="file" id="restoreFile" accept=".json" style="display:none" onchange="restaurarBackup(event)"><button class="btn-action btn-primary" onclick="document.getElementById('restoreFile').click()">Restaurar</button></div></div></div>
         
-        <!-- CONFIG STATUS -->
-        <div class="page" id="statusConfig"><div class="top-bar"><h1>⚙️ Configurar Status</h1></div><div class="panel"><h3>Gerenciar Status de Clientes</h3><p style="color:var(--text-muted);margin-bottom:15px;">Adicione, edite ou remova os status disponíveis para classificar seus clientes.</p><div style="display:flex;gap:10px;margin-bottom:15px"><input type="text" class="form-input" id="newStatusName" placeholder="Nome do novo status" style="flex:1"><input type="color" class="form-input" id="newStatusColor" value="#00c853" style="width:60px;padding:5px"><button class="btn-action btn-primary" onclick="addStatus()"><i class="fas fa-plus"></i> Adicionar</button></div><div id="statusList" style="display:flex;flex-wrap:wrap;gap:8px;"></div></div></div>
+        <!-- STATUS CONFIG -->
+        <div class="page" id="statusConfig"><div class="top-bar"><h1>⚙️ Status</h1></div><div class="panel"><h3>Gerenciar Status</h3><div style="display:flex;gap:10px;margin:15px 0"><input type="text" class="form-input" id="newStatusName" placeholder="Novo status" style="flex:1"><input type="color" class="form-input" id="newStatusColor" value="#00c853" style="width:60px;padding:5px"><button class="btn-action btn-primary" onclick="addStatus()"><i class="fas fa-plus"></i></button></div><div id="statusList" style="display:flex;flex-wrap:wrap;gap:8px;"></div></div></div>
     </main>
 </div>
 
 <!-- Modal Cliente -->
-<div class="modal-overlay" id="clienteModal"><div class="modal"><h2 id="modalTitle">Novo Cliente</h2><form id="clienteForm" onsubmit="salvarCliente(event)"><input type="hidden" id="clienteId"><div class="form-group"><label>Nome *</label><input type="text" id="clienteNome" required></div><div class="form-group"><label>Email *</label><input type="email" id="clienteEmail" required></div><div class="form-group"><label>Telefone *</label><input type="tel" id="clienteTelefone" required></div><div class="form-group"><label>Empresa</label><input type="text" id="clienteEmpresa"></div><div class="form-group"><label>Documento (CPF/CNPJ)</label><input type="text" id="clienteDoc"></div><div class="form-group"><label>Endereço</label><input type="text" id="clienteEndereco"></div><div class="form-group"><label>Status *</label><select id="clienteStatus"></select></div><div class="form-group"><label>Observações</label><textarea id="clienteObs" rows="2"></textarea></div><div class="modal-actions"><button type="button" class="btn-action btn-outline btn-sm" onclick="fecharModal()">Cancelar</button><button type="submit" class="btn-action btn-primary btn-sm">Salvar</button></div></form></div></div>
+<div class="modal-overlay" id="clienteModal"><div class="modal"><h2 id="modalTitle">Novo Cliente</h2><form id="clienteForm" onsubmit="salvarCliente(event)"><input type="hidden" id="clienteId"><div class="form-group"><label>Nome *</label><input type="text" id="clienteNome" required></div><div class="form-group"><label>Email *</label><input type="email" id="clienteEmail" required></div><div class="form-group"><label>Telefone *</label><input type="tel" id="clienteTelefone" required></div><div class="form-group"><label>Empresa</label><input type="text" id="clienteEmpresa"></div><div class="form-group"><label>Documento</label><input type="text" id="clienteDoc"></div><div class="form-group"><label>Endereço</label><input type="text" id="clienteEndereco"></div><div class="form-group"><label>Status *</label><select id="clienteStatus"></select></div><div class="form-group"><label>Pasta de origem</label><input type="text" id="clientePasta" readonly style="opacity:.7"></div><div class="form-group"><label>Observações</label><textarea id="clienteObs" rows="2"></textarea></div><div class="modal-actions"><button type="button" class="btn-action btn-outline btn-sm" onclick="fecharModal()">Cancelar</button><button type="submit" class="btn-action btn-primary btn-sm">Salvar</button></div></form></div></div>
 
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
-// CONFIG
 const fc={apiKey:"AIzaSyBUX_CQmgl62l5zdHjMM9umjWvBTqg8liA",authDomain:"kronos-pi.firebaseapp.com",projectId:"kronos-pi",storageBucket:"kronos-pi.firebasestorage.app",messagingSenderId:"1010262223400",appId:"1:1010262223400:web:710a5eaa3e260c772de31d"};
 firebase.initializeApp(fc);
 const db=firebase.firestore(),auth=firebase.auth();
 
-let u=null,clientes=[],statusList=[],isRegister=false,viewMode='table',currentSort='nome-asc';
+let u=null,clientes=[],statusList=[],isRegister=false,viewMode='table';
 
-// STATUS PADRÃO
 const defaultStatus=[
     {name:'Ativo',color:'#00c853',badge:'badge-ativo'},
     {name:'Inativo',color:'#ff1744',badge:'badge-inativo'},
@@ -285,7 +320,6 @@ function toggleForm(){
     document.getElementById('registerFormArea').style.display=isRegister?'block':'none';
     document.getElementById('toggleText').textContent=isRegister?'Já tem conta?':'Não tem conta?';
     document.getElementById('toggleLink').textContent=isRegister?'Fazer login':'Criar conta';
-    document.getElementById('alertMessage').style.display='none';
 }
 
 async function fazerLogin(){
@@ -305,13 +339,13 @@ async function criarConta(){
         await db.collection('usuarios').doc(r.user.uid).set({nome:n,email:e,criadoEm:firebase.firestore.FieldValue.serverTimestamp()});
         alertMsg('Conta criada! Faça login.','success');
         setTimeout(toggleForm,1500);
-    }catch(ex){alertMsg(ex.code==='auth/email-already-in-use'?'Email já cadastrado':'Erro ao criar conta','error')}
+    }catch(ex){alertMsg('Erro ao criar conta','error')}
 }
 
 async function loginGoogle(){
     const p=new firebase.auth.GoogleAuthProvider();
     try{await auth.signInWithPopup(p)}
-    catch(e){if(e.code!=='auth/popup-closed-by-user')alertMsg('Erro ao fazer login com Google','error')}
+    catch(e){if(e.code!=='auth/popup-closed-by-user')alertMsg('Erro','error')}
 }
 
 function logout(){auth.signOut()}
@@ -319,63 +353,47 @@ function logout(){auth.signOut()}
 // STATUS
 async function loadStatus(){
     const s=await db.collection('config').doc('status').get();
-    if(s.exists&&s.data().list){statusList=s.data().list}
+    if(s.exists&&s.data().list)statusList=s.data().list;
     else{statusList=[...defaultStatus];await db.collection('config').doc('status').set({list:statusList})}
     updateStatusUI();
 }
 
 function updateStatusUI(){
     const sel=document.getElementById('clienteStatus'),filt=document.getElementById('filterStatus'),list=document.getElementById('statusList');
-    if(sel){sel.innerHTML=statusList.map(s=>`<option value="${s.name}">${s.name}</option>`).join('')}
-    if(filt){filt.innerHTML='<option value="todos">Todos os Status</option>'+statusList.map(s=>`<option value="${s.name}">${s.name}</option>`).join('')}
-    if(list){list.innerHTML=statusList.map(s=>`<span class="badge" style="background:${s.color}20;color:${s.color};border:1px solid ${s.color}40;cursor:pointer;padding:8px 14px" onclick="editStatus('${s.name}')">${s.name} <i class="fas fa-times" style="margin-left:5px;font-size:.7em" onclick="event.stopPropagation();deleteStatus('${s.name}')"></i></span>`).join('')}
+    if(sel)sel.innerHTML=statusList.map(s=>`<option value="${s.name}">${s.name}</option>`).join('');
+    if(filt)filt.innerHTML='<option value="todos">Todos</option>'+statusList.map(s=>`<option value="${s.name}">${s.name}</option>`).join('');
+    if(list)list.innerHTML=statusList.map(s=>`<span class="badge" style="background:${s.color}20;color:${s.color};border:1px solid ${s.color}40;cursor:pointer;padding:8px 14px;margin:4px" onclick="editStatus('${s.name}')">${s.name} <i class="fas fa-times" style="margin-left:5px;font-size:.7em" onclick="event.stopPropagation();deleteStatus('${s.name}')"></i></span>`).join('');
 }
 
 async function addStatus(){
     const n=document.getElementById('newStatusName').value.trim(),c=document.getElementById('newStatusColor').value;
     if(!n)return toast('Digite um nome','error');
-    if(statusList.find(s=>s.name.toLowerCase()===n.toLowerCase()))return toast('Status já existe','error');
+    if(statusList.find(s=>s.name.toLowerCase()===n.toLowerCase()))return toast('Já existe','error');
     statusList.push({name:n,color:c,badge:'badge-'+n.toLowerCase().replace(/\s/g,'-')});
     await db.collection('config').doc('status').set({list:statusList});
-    updateStatusUI();
-    document.getElementById('newStatusName').value='';
-    carregarClientes();
-    toast('Status adicionado!','success');
+    updateStatusUI();carregarClientes();toast('Adicionado!','success');
 }
 
 async function deleteStatus(name){
-    if(!confirm(`Remover status "${name}"?`))return;
+    if(!confirm(`Remover "${name}"?`))return;
     statusList=statusList.filter(s=>s.name!==name);
     await db.collection('config').doc('status').set({list:statusList});
-    updateStatusUI();
-    carregarClientes();
-    toast('Status removido!','success');
+    updateStatusUI();carregarClientes();toast('Removido!','success');
 }
 
-async function editStatus(name){
-    const c=prompt('Novo nome para o status:',name);
-    if(!c)return;
-    const s=statusList.find(s=>s.name===name);
-    if(s){s.name=c;await db.collection('config').doc('status').set({list:statusList});updateStatusUI();carregarClientes();toast('Status atualizado!','success')}
-}
-
-function getBadgeClass(statusName){
-    const s=statusList.find(s=>s.name===statusName);
-    return s?s.badge:'badge-ativo';
-}
+function getBadge(s){const f=statusList.find(x=>x.name===s);return f?f.badge:'badge-ativo'}
 
 // CLIENTES
 async function carregarClientes(){
     const s=await db.collection('clientes').orderBy('dataCadastro','desc').get();
     clientes=[];s.forEach(d=>clientes.push({id:d.id,...d.data()}));
-    filtrar();
-    updateDashboard();
+    filtrar();updateDashboard();
 }
 
 function filtrar(){
     const b=document.getElementById('searchCliente').value.toLowerCase(),s=document.getElementById('filterStatus').value,o=document.getElementById('sortOrder').value;
     let f=[...clientes];
-    if(b)f=f.filter(c=>(c.nome||'').toLowerCase().includes(b)||(c.email||'').toLowerCase().includes(b)||(c.telefone||'').includes(b)||(c.empresa||'').toLowerCase().includes(b));
+    if(b)f=f.filter(c=>(c.nome||'').toLowerCase().includes(b)||(c.email||'').toLowerCase().includes(b)||(c.telefone||'').includes(b));
     if(s!=='todos')f=f.filter(c=>c.status===s);
     if(o==='nome-asc')f.sort((a,b)=>(a.nome||'').localeCompare(b.nome||''));
     else if(o==='nome-desc')f.sort((a,b)=>(b.nome||'').localeCompare(a.nome||''));
@@ -388,26 +406,21 @@ function renderClientes(f){
     const t=document.getElementById('tabelaClientes'),c=document.getElementById('cardView');
     if(viewMode==='table'){
         c.style.display='none';document.getElementById('tableView').style.display='block';
-        if(!f.length){t.innerHTML='<tr><td colspan="7" style="text-align:center;padding:40px;">Nenhum cliente encontrado</td></tr>';return}
-        t.innerHTML=f.map(c=>`<tr><td><strong>${c.nome}</strong></td><td>${c.email||'-'}</td><td>${c.telefone||'-'}</td><td>${c.empresa||'-'}</td><td><span class="badge ${getBadgeClass(c.status)}">${c.status||'Ativo'}</span></td><td style="font-size:.75em;color:var(--text-muted)">${c.dataCadastro?new Date(c.dataCadastro.toDate()).toLocaleDateString('pt-BR'):'-'}</td><td><button class="btn-action btn-outline btn-xs" onclick="editarCliente('${c.id}')"><i class="fas fa-edit"></i></button> <button class="btn-action btn-danger btn-xs" onclick="deletarCliente('${c.id}')"><i class="fas fa-trash"></i></button></td></tr>`).join('');
+        if(!f.length){t.innerHTML='<tr><td colspan="7" style="text-align:center;padding:40px;">Nenhum cliente</td></tr>';return}
+        t.innerHTML=f.map(cl=>`<tr><td><strong>${cl.nome}</strong></td><td>${cl.email||'-'}</td><td>${cl.telefone||'-'}</td><td>${cl.empresa||'-'}</td><td><span class="badge ${getBadge(cl.status)}">${cl.status||'Ativo'}</span></td><td style="font-size:.75em;color:var(--text-muted)">${cl.pasta||'-'}</td><td><button class="btn-action btn-outline btn-xs" onclick="editarCliente('${cl.id}')"><i class="fas fa-edit"></i></button> <button class="btn-action btn-danger btn-xs" onclick="deletarCliente('${cl.id}')"><i class="fas fa-trash"></i></button></td></tr>`).join('');
     }else{
         document.getElementById('tableView').style.display='none';c.style.display='grid';
-        if(!f.length){c.innerHTML='<p style="text-align:center;padding:40px;color:var(--text-muted);">Nenhum cliente</p>';return}
-        c.innerHTML=f.map(cl=>`<div class="client-card"><div class="client-card-header"><strong>${cl.nome}</strong><span class="badge ${getBadgeClass(cl.status)}">${cl.status||'Ativo'}</span></div><div class="client-card-body"><i class="fas fa-envelope"></i> ${cl.email||'-'}<br><i class="fas fa-phone"></i> ${cl.telefone||'-'}<br><i class="fas fa-building"></i> ${cl.empresa||'-'}<br><i class="fas fa-calendar"></i> ${cl.dataCadastro?new Date(cl.dataCadastro.toDate()).toLocaleDateString('pt-BR'):'-'}<br>${cl.obs?`<i class="fas fa-sticky-note"></i> ${cl.obs}`:''}</div><div style="margin-top:10px;display:flex;gap:5px"><button class="btn-action btn-outline btn-xs" onclick="editarCliente('${cl.id}')"><i class="fas fa-edit"></i> Editar</button><button class="btn-action btn-danger btn-xs" onclick="deletarCliente('${cl.id}')"><i class="fas fa-trash"></i></button></div></div>`).join('');
+        if(!f.length){c.innerHTML='<p style="text-align:center;padding:40px;">Nenhum cliente</p>';return}
+        c.innerHTML=f.map(cl=>`<div class="client-card"><div class="client-card-header"><strong>${cl.nome}</strong><span class="badge ${getBadge(cl.status)}">${cl.status||'Ativo'}</span></div><div class="client-card-body">📧 ${cl.email||'-'}<br>📱 ${cl.telefone||'-'}<br>🏢 ${cl.empresa||'-'}<br>📁 ${cl.pasta||'-'}<br>📅 ${cl.dataCadastro?new Date(cl.dataCadastro.toDate()).toLocaleDateString('pt-BR'):'-'}</div><div style="margin-top:10px;display:flex;gap:5px"><button class="btn-action btn-outline btn-xs" onclick="editarCliente('${cl.id}')">Editar</button><button class="btn-action btn-danger btn-xs" onclick="deletarCliente('${cl.id}')">Excluir</button></div></div>`).join('');
     }
 }
 
-function toggleView(){
-    viewMode=viewMode==='table'?'cards':'table';
-    document.getElementById('viewIcon').className='fas '+(viewMode==='table'?'fa-th-large':'fa-list');
-    document.getElementById('viewText').textContent=viewMode==='table'?'Cards':'Tabela';
-    filtrar();
-}
+function toggleView(){viewMode=viewMode==='table'?'cards':'table';document.getElementById('viewIcon').className='fas '+(viewMode==='table'?'fa-th-large':'fa-list');document.getElementById('viewText').textContent=viewMode==='table'?'Cards':'Tabela';filtrar();}
 
 function abrirModal(cl=null){
     document.getElementById('clienteForm').reset();document.getElementById('clienteId').value='';document.getElementById('modalTitle').textContent='Novo Cliente';
     updateStatusUI();
-    if(cl){document.getElementById('clienteId').value=cl.id;document.getElementById('clienteNome').value=cl.nome||'';document.getElementById('clienteEmail').value=cl.email||'';document.getElementById('clienteTelefone').value=cl.telefone||'';document.getElementById('clienteEmpresa').value=cl.empresa||'';document.getElementById('clienteDoc').value=cl.doc||'';document.getElementById('clienteEndereco').value=cl.endereco||'';document.getElementById('clienteStatus').value=cl.status||statusList[0]?.name||'Ativo';document.getElementById('clienteObs').value=cl.obs||'';document.getElementById('modalTitle').textContent='Editar Cliente'}
+    if(cl){document.getElementById('clienteId').value=cl.id;document.getElementById('clienteNome').value=cl.nome||'';document.getElementById('clienteEmail').value=cl.email||'';document.getElementById('clienteTelefone').value=cl.telefone||'';document.getElementById('clienteEmpresa').value=cl.empresa||'';document.getElementById('clienteDoc').value=cl.doc||'';document.getElementById('clienteEndereco').value=cl.endereco||'';document.getElementById('clienteStatus').value=cl.status||statusList[0]?.name||'Ativo';document.getElementById('clientePasta').value=cl.pasta||'';document.getElementById('clienteObs').value=cl.obs||'';document.getElementById('modalTitle').textContent='Editar Cliente'}
     document.getElementById('clienteModal').classList.add('active');
 }
 function fecharModal(){document.getElementById('clienteModal').classList.remove('active')}
@@ -415,50 +428,163 @@ function fecharModal(){document.getElementById('clienteModal').classList.remove(
 async function salvarCliente(e){
     e.preventDefault();
     const id=document.getElementById('clienteId').value;
-    const d={nome:document.getElementById('clienteNome').value,email:document.getElementById('clienteEmail').value,telefone:document.getElementById('clienteTelefone').value,empresa:document.getElementById('clienteEmpresa').value,doc:document.getElementById('clienteDoc').value,endereco:document.getElementById('clienteEndereco').value,status:document.getElementById('clienteStatus').value,obs:document.getElementById('clienteObs').value,atualizadoPor:u?.email,dataAtualizacao:firebase.firestore.FieldValue.serverTimestamp()};
+    const d={nome:document.getElementById('clienteNome').value,email:document.getElementById('clienteEmail').value,telefone:document.getElementById('clienteTelefone').value,empresa:document.getElementById('clienteEmpresa').value,doc:document.getElementById('clienteDoc').value,endereco:document.getElementById('clienteEndereco').value,status:document.getElementById('clienteStatus').value,pasta:document.getElementById('clientePasta').value,obs:document.getElementById('clienteObs').value,atualizadoPor:u?.email,dataAtualizacao:firebase.firestore.FieldValue.serverTimestamp()};
     if(id){await db.collection('clientes').doc(id).update(d)}
     else{d.dataCadastro=firebase.firestore.FieldValue.serverTimestamp();d.cadastradoPor=u?.email;await db.collection('clientes').add(d)}
-    fecharModal();carregarClientes();toast(id?'Cliente atualizado!':'Cliente cadastrado!','success');
+    fecharModal();carregarClientes();toast(id?'Atualizado!':'Cadastrado!','success');
 }
 
 function editarCliente(id){const c=clientes.find(x=>x.id===id);if(c)abrirModal(c)}
-async function deletarCliente(id){if(confirm('Excluir este cliente?')){await db.collection('clientes').doc(id).delete();carregarClientes();toast('Cliente excluído!','success')}}
+async function deletarCliente(id){if(confirm('Excluir?')){await db.collection('clientes').doc(id).delete();carregarClientes();toast('Excluído!','success')}}
 
-// CSV
+// IMPORTAÇÃO DE MÚLTIPLAS PASTAS
+async function processarPastas(event){
+    const files=event.target.files;
+    if(!files||files.length===0)return;
+    
+    const progress=document.getElementById('importProgress');
+    const progressFill=document.getElementById('progressFill');
+    const progressText=document.getElementById('progressText');
+    const progressCount=document.getElementById('progressCount');
+    const fileList=document.getElementById('fileList');
+    
+    progress.style.display='block';
+    fileList.innerHTML='';
+    
+    // Agrupar arquivos por pasta
+    const pastaMap={};
+    let totalCSV=0;
+    
+    for(const file of files){
+        const path=file.webkitRelativePath||file.name;
+        const parts=path.split('/');
+        const pasta=parts.length>1?parts.slice(0,-1).join(' / '):'Raiz';
+        const fileName=parts[parts.length-1];
+        
+        if(fileName.endsWith('.csv')){
+            if(!pastaMap[pasta])pastaMap[pasta]=[];
+            pastaMap[pasta].push(file);
+            totalCSV++;
+        }
+    }
+    
+    // Mostrar arquivos encontrados
+    fileList.innerHTML='<h4 style="margin-bottom:10px;">📁 Pastas e arquivos encontrados:</h4>';
+    for(const[pasta,arquivos]of Object.entries(pastaMap)){
+        fileList.innerHTML+=`<div class="file-item" style="font-weight:600;color:var(--accent);"><i class="fas fa-folder"></i> ${pasta} (${arquivos.length} arquivos)</div>`;
+        arquivos.forEach(f=>{fileList.innerHTML+=`<div class="file-item" style="padding-left:30px;"><i class="fas fa-file-csv" style="color:var(--success)"></i> ${f.name}</div>`});
+    }
+    
+    if(totalCSV===0){toast('Nenhum arquivo CSV encontrado!','error');progress.style.display='none';return}
+    
+    // Importar
+    let processados=0;
+    const batch=db.batch();
+    let batchCount=0;
+    
+    for(const[pasta,arquivos]of Object.entries(pastaMap)){
+        for(const file of arquivos){
+            const text=await file.text();
+            const result=Papa.parse(text,{header:true,skipEmptyLines:true});
+            
+            for(const item of result.data){
+                batch.set(db.collection('clientes').doc(),{
+                    nome:item.nome||item.Nome||Object.values(item)[0]||'Sem nome',
+                    email:item.email||item.Email||'',
+                    telefone:item.telefone||item.Telefone||item.tel||'',
+                    empresa:item.empresa||item.Empresa||'',
+                    status:item.status||item.Status||statusList[0]?.name||'Ativo',
+                    pasta:pasta,
+                    cadastradoPor:u?.email,
+                    dataCadastro:firebase.firestore.FieldValue.serverTimestamp()
+                });
+                batchCount++;
+                if(batchCount%400===0){await batch.commit();batchCount=0}
+            }
+            
+            processados++;
+            const pct=Math.round((processados/totalCSV)*100);
+            progressFill.style.width=pct+'%';
+            progressText.textContent=`Importando ${pasta}...`;
+            progressCount.textContent=`${processados}/${totalCSV}`;
+        }
+    }
+    
+    if(batchCount>0)await batch.commit();
+    
+    progressFill.style.width='100%';
+    progressText.textContent='✅ Importação concluída!';
+    toast(`${totalCSV} arquivos importados com sucesso!`,'success');
+    carregarClientes();
+    event.target.value='';
+    
+    setTimeout(()=>{progress.style.display='none';fileList.innerHTML=''},3000);
+}
+
 function importarCSV(event){
     const f=event.target.files[0];if(!f)return;
-    Papa.parse(f,{header:true,skipEmptyLines:true,complete:async r=>{if(r.data.length>0){const batch=db.batch();let c=0;for(const item of r.data){batch.set(db.collection('clientes').doc(),{nome:item.nome||item.Nome||Object.values(item)[0]||'Sem nome',email:item.email||item.Email||'',telefone:item.telefone||item.Telefone||item.tel||'',empresa:item.empresa||item.Empresa||'',status:item.status||item.Status||statusList[0]?.name||'Ativo',cadastradoPor:u?.email,dataCadastro:firebase.firestore.FieldValue.serverTimestamp()});c++;if(c%400===0)await batch.commit()}await batch.commit();carregarClientes();toast(`${r.data.length} clientes importados!`,'success')}event.target.value=''}});
+    Papa.parse(f,{header:true,skipEmptyLines:true,complete:async r=>{
+        if(r.data.length>0){
+            const batch=db.batch();let c=0;
+            for(const item of r.data){
+                batch.set(db.collection('clientes').doc(),{
+                    nome:item.nome||item.Nome||Object.values(item)[0]||'Sem nome',
+                    email:item.email||item.Email||'',
+                    telefone:item.telefone||item.Telefone||item.tel||'',
+                    empresa:item.empresa||item.Empresa||'',
+                    status:item.status||item.Status||statusList[0]?.name||'Ativo',
+                    pasta:'Upload direto',
+                    cadastradoPor:u?.email,
+                    dataCadastro:firebase.firestore.FieldValue.serverTimestamp()
+                });
+                c++;if(c%400===0)await batch.commit();
+            }
+            await batch.commit();carregarClientes();toast(`${r.data.length} clientes!`,'success');
+        }
+        event.target.value='';
+    }});
 }
 
 // DASHBOARD
 function updateDashboard(){
     const t=clientes.length;
     document.getElementById('dashboardStats').innerHTML=`<div class="stat-card"><div class="icon icon-gold"><i class="fas fa-users"></i></div><div class="value">${t}</div><div class="label">Total</div></div>`+statusList.map(s=>{const q=clientes.filter(c=>c.status===s.name).length;return `<div class="stat-card"><div class="icon" style="background:${s.color}20;color:${s.color}"><i class="fas fa-circle"></i></div><div class="value">${q}</div><div class="label">${s.name}</div></div>`}).join('');
-    
     const ctx=document.getElementById('statusChart')?.getContext('2d');
-    if(ctx){if(window.chart)window.chart.destroy();window.chart=new Chart(ctx,{type:'doughnut',data:{labels:statusList.map(s=>s.name),datasets:[{data:statusList.map(s=>clientes.filter(c=>c.status===s.name).length),backgroundColor:statusList.map(s=>s.color+'99'),borderColor:statusList.map(s=>s.color),borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#a0a3b1'}}}}})}
-    
-    document.getElementById('recentClients').innerHTML=clientes.slice(0,5).map(c=>`<div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center"><span><strong>${c.nome}</strong><br><small style="color:var(--text-muted)">${c.email||''}</small></span><span class="badge ${getBadgeClass(c.status)}">${c.status||'Ativo'}</span></div>`).join('')||'<p style="text-align:center;padding:20px;color:var(--text-muted);">Nenhum cliente</p>';
+    if(ctx){if(window.chart)window.chart.destroy();window.chart=new Chart(ctx,{type:'doughnut',data:{labels:statusList.map(s=>s.name),datasets:[{data:statusList.map(s=>clientes.filter(c=>c.status===s.name).length),backgroundColor:statusList.map(s=>s.color+'99'),borderWidth:2}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{color:'#a0a3b1'}}}}})}
+    document.getElementById('recentClients').innerHTML=clientes.slice(0,5).map(c=>`<div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between"><span><strong>${c.nome}</strong><br><small style="color:var(--text-muted)">📁 ${c.pasta||'-'}</small></span><span class="badge ${getBadge(c.status)}">${c.status}</span></div>`).join('')||'<p style="text-align:center;padding:20px;">Nenhum</p>';
 }
 
 // RELATÓRIOS
-function gerarPDF(){const{jsPDF}=window.jspdf;const d=new jsPDF();d.text('Kronos-PI - Relatório de Clientes',14,20);d.autoTable({startY:30,head:[['Nome','Email','Telefone','Empresa','Status','Cadastro']],body:clientes.map(c=>[c.nome,c.email,c.telefone,c.empresa,c.status,c.dataCadastro?new Date(c.dataCadastro.toDate()).toLocaleDateString('pt-BR'):'-'])});d.save(`clientes-${new Date().toISOString().split('T')[0]}.pdf`);toast('PDF gerado!','success')}
-function gerarBalancete(){const{jsPDF}=window.jspdf;const d=new jsPDF();d.text('Kronos-PI - Balancete',14,20);let y=40;statusList.forEach(s=>{d.text(`${s.name}: ${clientes.filter(c=>c.status===s.name).length}`,14,y);y+=10});d.save(`balancete-${new Date().toISOString().split('T')[0]}.pdf`);toast('Balancete gerado!','success')}
-function gerarPorStatus(){const{jsPDF}=window.jspdf;const d=new jsPDF();statusList.forEach((s,i)=>{if(i>0)d.addPage();d.text(`Clientes ${s.name}`,14,20);d.autoTable({startY:30,head:[['Nome','Email','Telefone']],body:clientes.filter(c=>c.status===s.name).map(c=>[c.nome,c.email,c.telefone])})});d.save(`por-status-${new Date().toISOString().split('T')[0]}.pdf`);toast('PDF por status gerado!','success')}
+function gerarPDF(){const{jsPDF}=window.jspdf;const d=new jsPDF();d.text('Kronos-PI',14,20);d.autoTable({startY:30,head:[['Nome','Email','Telefone','Empresa','Status','Pasta']],body:clientes.map(c=>[c.nome,c.email,c.telefone,c.empresa,c.status,c.pasta])});d.save('clientes.pdf');toast('PDF!','success')}
+function gerarBalancete(){const{jsPDF}=window.jspdf;const d=new jsPDF();d.text('Balancete',14,20);let y=40;statusList.forEach(s=>{d.text(`${s.name}: ${clientes.filter(c=>c.status===s.name).length}`,14,y);y+=10});d.save('balancete.pdf');toast('Gerado!','success')}
+function baixarBackup(){const b={data:new Date().toISOString(),clientes,statusList},bl=new Blob([JSON.stringify(b)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(bl);a.download='backup.json';a.click();toast('Backup!','success')}
+async function restaurarBackup(event){const f=event.target.files[0];if(!f)return;const r=new FileReader();r.onload=async e=>{try{const b=JSON.parse(e.target.result);if(b.clientes&&confirm('Restaurar?')){if(b.statusList){statusList=b.statusList;await db.collection('config').doc('status').set({list:statusList});updateStatusUI()}const batch=db.batch();b.clientes.forEach(c=>batch.set(db.collection('clientes').doc(),c));await batch.commit();carregarClientes();toast('Restaurado!','success')}}catch{toast('Inválido','error')}};r.readAsText(f);event.target.value=''}
 
-// BACKUP
-function baixarBackup(){const b={data:new Date().toISOString(),clientes,statusList,versao:'3.0'},bl=new Blob([JSON.stringify(b)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(bl);a.download=`kronos-backup-${new Date().toISOString().split('T')[0]}.json`;a.click();toast('Backup baixado!','success')}
-async function restaurarBackup(event){const f=event.target.files[0];if(!f)return;const r=new FileReader();r.onload=async e=>{try{const b=JSON.parse(e.target.result);if(b.clientes&&confirm(`Restaurar ${b.clientes.length} clientes?`)){if(b.statusList){statusList=b.statusList;await db.collection('config').doc('status').set({list:statusList});updateStatusUI()}const batch=db.batch();b.clientes.forEach(c=>batch.set(db.collection('clientes').doc(),c));await batch.commit();carregarClientes();toast('Backup restaurado!','success')}}catch{toast('Arquivo inválido','error')}};r.readAsText(f);event.target.value=''}
-
-// NAV
 function nav(page){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
     document.getElementById(page)?.classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(n=>{if(n.textContent.toLowerCase().includes(page))n.classList.add('active')});
+    document.querySelectorAll('.nav-item').forEach(n=>{if(n.textContent.toLowerCase().includes(page==='uploadSimples'?'upload':page==='importar'?'importar':page))n.classList.add('active')});
     if(page==='clientes'||page==='dashboard')carregarClientes();
     if(page==='statusConfig')updateStatusUI();
 }
+
+// Drag and drop
+document.addEventListener('DOMContentLoaded',()=>{
+    const area=document.getElementById('uploadArea');
+    if(area){
+        area.addEventListener('dragover',e=>{e.preventDefault();area.classList.add('dragover')});
+        area.addEventListener('dragleave',()=>area.classList.remove('dragover'));
+        area.addEventListener('drop',e=>{
+            e.preventDefault();area.classList.remove('dragover');
+            const files=e.dataTransfer.files;
+            if(files.length>0){
+                document.getElementById('folderInput').files=files;
+                processarPastas({target:{files}});
+            }
+        });
+    }
+});
 
 function toast(msg,type='info'){const t=document.createElement('div');t.className=`toast toast-${type}`;t.textContent=msg;document.getElementById('toastContainer').appendChild(t);setTimeout(()=>t.remove(),3500)}
 function alertMsg(msg,type){const a=document.getElementById('alertMessage');a.textContent=msg;a.className=`alert alert-${type}`;setTimeout(()=>a.style.display='none',4000)}
