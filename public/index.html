@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Kronos-PI | Gestão Inteligente de Clientes</title>
+    <meta name="description" content="Sistema profissional de gestão de clientes - Kronos-PI">
+    <meta name="keywords" content="gestão, clientes, CRM, kronos">
+    <meta name="author" content="Kronos-PI">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Kronos-PI | Gestão de Clientes">
+    <meta property="og:description" content="Sistema profissional de gestão de clientes">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kronos-pi.web.app">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#1a237e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Kronos-PI">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
+    <link rel="apple-touch-icon" href="/assets/logo.svg">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+    
+    <!-- Bibliotecas -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+    
+    <!-- Firebase Config -->
+    <script src="/js/config.js"></script>
+</head>
+<body>
+    
+    <!-- Loading Screen -->
+    <div id="loadingScreen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:white; display:flex; align-items:center; justify-content:center; z-index:9999;">
+        <div style="text-align:center;">
+            <div style="width:80px; height:80px; background:linear-gradient(135deg, #1a237e, #0d47a1); border-radius:20px; margin:0 auto 20px; display:flex; align-items:center; justify-content:center; font-size:40px; color:white; animation:pulse 1.5s infinite;">
+                <i class="fas fa-crown"></i>
+            </div>
+            <h2 style="color:#1a237e;">Kronos-PI</h2>
+            <p style="color:#666;">Carregando...</p>
+        </div>
+    </div>
+
+    <!-- SEU SISTEMA COMPLETO AQUI -->
+
+    <style>
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
+
+    <script>
+        // Remover loading screen quando tudo carregar
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.opacity = '0';
+                document.getElementById('loadingScreen').style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                }, 500);
+            }, 1000);
+        });
+
+        // Inicializar Analytics
+        const analytics = firebase.analytics();
+        analytics.logEvent('page_view', {
+            page_title: document.title,
+            page_location: window.location.href
+        });
+    </script>
+</body>
+</html>
