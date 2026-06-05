@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kronos-PI | Gestão de Clientes</title>
     
+    <!-- FAVICON - Logo K no navegador -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='50,0 100,25 100,75 50,100 0,75 0,25' fill='%23c9a84c'/><text x='50' y='68' text-anchor='middle' font-size='55' font-weight='900' fill='%230a0e27'>K</text></svg>">
+    
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -48,121 +51,101 @@
             min-height: 100vh;
         }
 
-        /* ==================== LOGO ANIMADA K ==================== */
+        /* ==================== LOGO K GIRANDO VERTICAL ==================== */
         .kronos-logo {
-            width: 90px;
-            height: 90px;
+            width: 100px;
+            height: 100px;
             position: relative;
             margin: 0 auto;
-            cursor: pointer;
+            perspective: 1000px;
         }
 
-        .kronos-logo .hexagon {
+        .logo-inner {
             width: 100%;
             height: 100%;
-            background: var(--gold-gradient);
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            position: relative;
+            transform-style: preserve-3d;
+            animation: flipVertical 4s infinite ease-in-out;
+        }
+
+        .logo-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            animation: rotateHex 8s infinite linear;
-            box-shadow: 0 0 30px rgba(201, 168, 76, 0.4), 0 0 60px rgba(201, 168, 76, 0.2), 0 0 90px rgba(201, 168, 76, 0.1);
-            position: relative;
-        }
-
-        .kronos-logo .hexagon::before {
-            content: '';
-            position: absolute;
-            top: -4px;
-            left: -4px;
-            right: -4px;
-            bottom: -4px;
-            background: var(--gold-gradient);
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            z-index: -1;
-            opacity: 0.5;
-            animation: rotateHex 8s infinite linear reverse;
         }
 
-        .kronos-logo .hexagon::after {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: -8px;
-            right: -8px;
-            bottom: -8px;
+        .logo-front {
             background: var(--gold-gradient);
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            z-index: -2;
-            opacity: 0.3;
-            animation: rotateHex 12s infinite linear;
+            box-shadow: 0 0 40px rgba(201, 168, 76, 0.5), 0 0 80px rgba(201, 168, 76, 0.2);
         }
 
-        .kronos-logo .letter-k {
-            font-size: 48px;
+        .logo-back {
+            background: var(--gold-gradient);
+            transform: rotateY(180deg);
+            box-shadow: 0 0 40px rgba(201, 168, 76, 0.5), 0 0 80px rgba(201, 168, 76, 0.2);
+        }
+
+        .logo-letter {
+            font-size: 55px;
             font-weight: 900;
             color: var(--primary);
-            position: relative;
-            z-index: 2;
-            animation: pulseK 2s infinite ease-in-out;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        @keyframes rotateHex {
-            0% { transform: rotate(0deg) scale(1); }
-            25% { transform: rotate(90deg) scale(1.02); }
-            50% { transform: rotate(180deg) scale(1); }
-            75% { transform: rotate(270deg) scale(1.02); }
-            100% { transform: rotate(360deg) scale(1); }
+        @keyframes flipVertical {
+            0% { transform: rotateY(0deg); }
+            25% { transform: rotateY(90deg); }
+            50% { transform: rotateY(180deg); }
+            75% { transform: rotateY(270deg); }
+            100% { transform: rotateY(360deg); }
         }
 
-        @keyframes pulseK {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        /* Versão pequena para sidebar */
-        .kronos-logo-small {
-            width: 55px;
-            height: 55px;
-            margin: 0 auto 10px;
-        }
-
-        .kronos-logo-small .hexagon {
-            width: 100%;
-            height: 100%;
-            background: var(--gold-gradient);
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: rotateHex 8s infinite linear;
-            box-shadow: 0 0 20px rgba(201, 168, 76, 0.3);
-        }
-
-        .kronos-logo-small .letter-k {
-            font-size: 28px;
-            font-weight: 900;
-            color: var(--primary);
-        }
-
-        /* Brilho ao redor */
+        /* Brilho pulsante */
         .logo-glow {
             position: absolute;
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(201,168,76,0.3) 0%, transparent 70%);
+            width: 140px;
+            height: 140px;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            animation: glowPulse 3s infinite ease-in-out;
+            background: radial-gradient(circle, rgba(201,168,76,0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 2s infinite ease-in-out;
             pointer-events: none;
+            z-index: -1;
         }
 
-        @keyframes glowPulse {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.3; }
             50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.8; }
+        }
+
+        /* Versão pequena sidebar */
+        .kronos-logo-small {
+            width: 60px;
+            height: 60px;
+            perspective: 800px;
+            margin: 0 auto 10px;
+        }
+
+        .kronos-logo-small .logo-inner {
+            animation: flipVertical 4s infinite ease-in-out;
+        }
+
+        .kronos-logo-small .logo-face {
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            background: var(--gold-gradient);
+        }
+
+        .kronos-logo-small .logo-letter {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--primary);
         }
 
         /* ==================== TELA DE LOGIN ==================== */
@@ -180,7 +163,7 @@
             overflow: hidden;
         }
 
-        /* Partículas douradas no fundo */
+        /* Partículas */
         .particles {
             position: absolute;
             top: 0;
@@ -196,22 +179,22 @@
             height: 3px;
             background: var(--accent);
             border-radius: 50%;
-            animation: floatParticle 6s infinite linear;
+            animation: floatUp 8s infinite linear;
             opacity: 0;
         }
 
-        @keyframes floatParticle {
+        @keyframes floatUp {
             0% { transform: translateY(100vh) scale(0); opacity: 0; }
             10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100px) scale(1); opacity: 0; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
         }
 
         .login-card {
             background: var(--secondary);
             border: 1px solid var(--border);
             border-radius: 30px;
-            padding: 50px 40px;
+            padding: 45px 35px;
             width: 100%;
             max-width: 420px;
             text-align: center;
@@ -246,7 +229,7 @@
         }
 
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             text-align: left;
         }
 
@@ -262,7 +245,7 @@
 
         .form-input {
             width: 100%;
-            padding: 14px 18px;
+            padding: 13px 16px;
             background: var(--primary);
             border: 2px solid var(--border);
             border-radius: 12px;
@@ -283,12 +266,12 @@
 
         .password-toggle {
             position: absolute;
-            right: 15px;
+            right: 14px;
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
             color: var(--text-muted);
-            font-size: 1.2em;
+            font-size: 1.1em;
             transition: color 0.3s;
         }
 
@@ -309,7 +292,7 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             transition: all 0.3s;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .btn-login:hover {
@@ -317,10 +300,16 @@
             box-shadow: 0 15px 35px rgba(201,168,76,0.4);
         }
 
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .divider {
             display: flex;
             align-items: center;
-            margin: 25px 0;
+            margin: 22px 0;
             color: var(--text-muted);
             font-size: 0.85em;
         }
@@ -338,12 +327,12 @@
 
         .btn-google {
             width: 100%;
-            padding: 14px;
+            padding: 13px;
             background: white;
             color: #333;
             border: none;
             border-radius: 12px;
-            font-size: 1em;
+            font-size: 0.95em;
             font-weight: 600;
             cursor: pointer;
             display: flex;
@@ -359,8 +348,12 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.2);
         }
 
+        .btn-google img {
+            width: 18px;
+        }
+
         .register-link {
-            margin-top: 20px;
+            margin-top: 18px;
             color: var(--text-muted);
             font-size: 0.9em;
         }
@@ -377,11 +370,12 @@
         }
 
         .alert-msg {
-            padding: 12px;
+            padding: 12px 15px;
             border-radius: 10px;
             margin-bottom: 15px;
-            font-size: 0.9em;
+            font-size: 0.85em;
             display: none;
+            text-align: left;
         }
 
         .alert-error {
@@ -449,7 +443,7 @@
             letter-spacing: 2px;
             color: var(--text-muted);
             padding: 0 15px;
-            margin: 20px 0 8px;
+            margin: 18px 0 8px;
         }
 
         .nav-item {
@@ -485,7 +479,8 @@
         }
 
         .drive-dot {
-            width: 7px; height: 7px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
             margin-left: auto;
         }
@@ -513,7 +508,8 @@
         }
 
         .user-avatar {
-            width: 35px; height: 35px;
+            width: 35px;
+            height: 35px;
             background: var(--gold-gradient);
             border-radius: 8px;
             display: flex;
@@ -542,7 +538,8 @@
             background: none;
             border: 1px solid var(--border);
             color: var(--text-secondary);
-            width: 30px; height: 30px;
+            width: 30px;
+            height: 30px;
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s;
@@ -592,7 +589,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Stats */
         .stats-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -607,26 +603,22 @@
             padding: 22px;
             cursor: pointer;
             transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
         }
 
         .stat-card:hover {
             border-color: var(--accent);
             transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
         }
 
         .stat-card .icon {
-            width: 45px; height: 45px;
+            width: 45px;
+            height: 45px;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.1em;
             margin-bottom: 12px;
-            position: relative;
-            z-index: 1;
         }
 
         .icon-gold { background: rgba(201,168,76,0.15); color: var(--accent); }
@@ -637,8 +629,6 @@
         .stat-card .value {
             font-size: 2em;
             font-weight: 800;
-            position: relative;
-            z-index: 1;
         }
 
         .stat-card .label {
@@ -646,11 +636,8 @@
             font-size: 0.75em;
             text-transform: uppercase;
             letter-spacing: 1px;
-            position: relative;
-            z-index: 1;
         }
 
-        /* Drive */
         .drive-panel {
             background: var(--card-bg);
             border: 1px solid var(--border);
@@ -665,10 +652,6 @@
             gap: 10px;
             margin-bottom: 15px;
             font-size: 1.1em;
-        }
-
-        .drive-panel h3 i {
-            color: var(--google-blue);
         }
 
         .drive-connect-area {
@@ -704,7 +687,8 @@
         }
 
         .file-icon {
-            width: 38px; height: 38px;
+            width: 38px;
+            height: 38px;
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -729,7 +713,6 @@
             color: var(--text-muted);
         }
 
-        /* Buttons */
         .btn {
             padding: 9px 18px;
             border-radius: 8px;
@@ -785,7 +768,6 @@
             color: white;
         }
 
-        /* Table */
         .table-container {
             background: var(--card-bg);
             border: 1px solid var(--border);
@@ -855,12 +837,13 @@
             border: 1px solid rgba(255,23,68,0.3);
         }
 
-        /* Modal */
         .modal-overlay {
             display: none;
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: rgba(0,0,0,0.8);
             backdrop-filter: blur(8px);
             z-index: 1000;
@@ -879,12 +862,6 @@
             padding: 30px;
             width: 90%;
             max-width: 480px;
-            animation: floatUp 0.3s ease;
-        }
-
-        @keyframes floatUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .modal h2 {
@@ -921,7 +898,6 @@
             margin-top: 20px;
         }
 
-        /* Toast */
         .toast-container {
             position: fixed;
             bottom: 20px;
@@ -964,15 +940,19 @@
 
     <!-- ==================== TELA DE LOGIN ==================== -->
     <div class="login-wrapper" id="loginScreen">
-        <!-- Partículas douradas -->
         <div class="particles" id="particles"></div>
         
-        <div class="login-card" id="loginCard">
-            <!-- LOGO ANIMADA K -->
+        <div class="login-card">
+            <!-- LOGO K GIRANDO VERTICALMENTE -->
             <div class="kronos-logo">
                 <div class="logo-glow"></div>
-                <div class="hexagon">
-                    <span class="letter-k">K</span>
+                <div class="logo-inner">
+                    <div class="logo-face logo-front">
+                        <span class="logo-letter">K</span>
+                    </div>
+                    <div class="logo-face logo-back">
+                        <span class="logo-letter">K</span>
+                    </div>
                 </div>
             </div>
             
@@ -981,7 +961,7 @@
             
             <div class="alert-msg" id="alertMessage"></div>
             
-            <!-- Login Form -->
+            <!-- Login -->
             <div id="loginFormArea">
                 <div class="form-group">
                     <label>📧 Email</label>
@@ -994,36 +974,34 @@
                         <span class="password-toggle" onclick="togglePass('loginPassword', this)">👁️</span>
                     </div>
                 </div>
-                <button class="btn-login" onclick="fazerLogin()">
+                <button class="btn-login" onclick="fazerLogin()" id="loginBtn">
                     <i class="fas fa-sign-in-alt"></i> ENTRAR
                 </button>
             </div>
             
-            <!-- Register Form -->
+            <!-- Registro -->
             <div id="registerFormArea" style="display:none;">
                 <div class="form-group">
-                    <label>👤 Nome Completo</label>
-                    <input type="text" class="form-input" id="regNome" placeholder="Seu nome">
+                    <label>👤 Nome</label>
+                    <input type="text" class="form-input" id="regNome" placeholder="Seu nome completo">
                 </div>
                 <div class="form-group">
                     <label>📧 Email</label>
                     <input type="email" class="form-input" id="regEmail" placeholder="seu@email.com">
                 </div>
                 <div class="form-group">
-                    <label>🔒 Senha</label>
-                    <input type="password" class="form-input" id="regPassword" placeholder="Mínimo 6 caracteres">
+                    <label>🔒 Senha (mín. 6 caracteres)</label>
+                    <input type="password" class="form-input" id="regPassword" placeholder="••••••••">
                 </div>
-                <button class="btn-login" onclick="criarConta()">
+                <button class="btn-login" onclick="criarConta()" id="regBtn">
                     <i class="fas fa-user-plus"></i> CRIAR CONTA
                 </button>
             </div>
             
-            <div class="divider">
-                <span>ou continue com</span>
-            </div>
+            <div class="divider"><span>ou</span></div>
             
             <button class="btn-google" onclick="loginComGoogle()">
-                <img src="https://www.google.com/favicon.ico" alt="G" width="18">
+                <img src="https://www.google.com/favicon.ico" alt="G">
                 Entrar com Google
             </button>
             
@@ -1039,10 +1017,14 @@
         
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
-                <!-- LOGO PEQUENA -->
                 <div class="kronos-logo-small">
-                    <div class="hexagon">
-                        <span class="letter-k">K</span>
+                    <div class="logo-inner">
+                        <div class="logo-face logo-front">
+                            <span class="logo-letter">K</span>
+                        </div>
+                        <div class="logo-face logo-back">
+                            <span class="logo-letter">K</span>
+                        </div>
                     </div>
                 </div>
                 <h2>KRONOS</h2>
@@ -1122,7 +1104,7 @@
                 
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
                     <div class="drive-panel">
-                        <h3>📈 Distribuição de Status</h3>
+                        <h3>📈 Distribuição</h3>
                         <canvas id="statusChart" height="200"></canvas>
                     </div>
                     <div class="drive-panel">
@@ -1136,9 +1118,9 @@
             <div class="page" id="clientes">
                 <div class="top-bar">
                     <h1>👥 Clientes</h1>
-                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <div style="display:flex; gap:8px;">
                         <button class="btn btn-primary btn-sm" onclick="abrirModalCliente()"><i class="fas fa-plus"></i> Novo</button>
-                        <button class="btn btn-google btn-sm" onclick="navigateTo('drive')"><i class="fab fa-google-drive"></i> Importar Drive</button>
+                        <button class="btn btn-google btn-sm" onclick="navigateTo('drive')"><i class="fab fa-google-drive"></i> Drive</button>
                         <button class="btn btn-outline btn-sm" onclick="gerarPDF()"><i class="fas fa-file-pdf"></i> PDF</button>
                     </div>
                 </div>
@@ -1156,9 +1138,7 @@
                         <thead>
                             <tr><th>Cliente</th><th>Email</th><th>Telefone</th><th>Status</th><th>Origem</th><th>Ações</th></tr>
                         </thead>
-                        <tbody id="tabelaClientes">
-                            <tr><td colspan="6" style="text-align:center; padding:40px;">Carregando...</td></tr>
-                        </tbody>
+                        <tbody id="tabelaClientes"></tbody>
                     </table>
                 </div>
             </div>
@@ -1168,7 +1148,7 @@
                 <div class="top-bar">
                     <h1>📁 Google Drive</h1>
                     <div style="display:flex; gap:8px;">
-                        <button class="btn btn-google btn-sm" onclick="conectarDrive()" id="btnConnectDrive">
+                        <button class="btn btn-google btn-sm" onclick="conectarDrive()">
                             <i class="fab fa-google"></i> Conectar Drive
                         </button>
                         <button class="btn btn-outline btn-sm" onclick="listarArquivosDrive()">
@@ -1178,12 +1158,12 @@
                 </div>
                 
                 <div class="drive-panel">
-                    <h3><i class="fab fa-google-drive"></i> Arquivos do Google Drive</h3>
+                    <h3><i class="fab fa-google-drive"></i> Arquivos do Drive</h3>
                     
                     <div class="drive-connect-area" id="driveConnectArea">
                         <i class="fab fa-google-drive" style="font-size:4em; color:var(--text-muted); margin-bottom:15px; display:block;"></i>
-                        <h3>Conecte sua conta Google Drive</h3>
-                        <p style="color:var(--text-muted); margin:10px 0 20px;">Acesse planilhas e arquivos CSV do seu Drive</p>
+                        <h3>Conecte seu Google Drive</h3>
+                        <p style="color:var(--text-muted); margin:10px 0 20px;">Clique no botão para acessar seus arquivos</p>
                         <button class="btn btn-google" onclick="conectarDrive()">
                             <i class="fab fa-google"></i> Conectar Google Drive
                         </button>
@@ -1193,55 +1173,51 @@
                 </div>
             </div>
             
-            <!-- IMPORTAR -->
+            <!-- IMPORTAR / RELATÓRIOS / BACKUP (simplificados) -->
             <div class="page" id="importar">
-                <div class="top-bar"><h1>📥 Importar Dados</h1></div>
+                <div class="top-bar"><h1>📥 Importar</h1></div>
                 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px;">
                     <div class="drive-panel" style="text-align:center;">
-                        <i class="fab fa-google-drive" style="font-size:3em; color:var(--google-blue); margin-bottom:15px;"></i>
-                        <h3>Google Drive</h3>
-                        <p style="color:var(--text-muted); margin:10px 0;">Importe planilhas do Drive</p>
+                        <i class="fab fa-google-drive" style="font-size:3em; color:var(--google-blue);"></i>
+                        <h3 style="margin:15px 0;">Google Drive</h3>
                         <button class="btn btn-google" onclick="navigateTo('drive')">Abrir Drive</button>
                     </div>
                     <div class="drive-panel" style="text-align:center;">
-                        <i class="fas fa-file-upload" style="font-size:3em; color:var(--accent); margin-bottom:15px;"></i>
-                        <h3>Arquivo Local</h3>
-                        <p style="color:var(--text-muted); margin:10px 0;">CSV, Excel ou JSON</p>
+                        <i class="fas fa-file-upload" style="font-size:3em; color:var(--accent);"></i>
+                        <h3 style="margin:15px 0;">Arquivo CSV</h3>
                         <input type="file" id="localFile" accept=".csv" style="display:none;" onchange="importarLocal(event)">
                         <button class="btn btn-primary" onclick="document.getElementById('localFile').click()">Selecionar</button>
                     </div>
                 </div>
             </div>
             
-            <!-- RELATÓRIOS -->
             <div class="page" id="relatorios">
                 <div class="top-bar"><h1>📄 Relatórios</h1></div>
                 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px;">
                     <div class="drive-panel" style="text-align:center;">
-                        <i class="fas fa-file-pdf" style="font-size:3em; color:var(--danger); margin-bottom:15px;"></i>
-                        <h3>Relatório Completo</h3>
+                        <i class="fas fa-file-pdf" style="font-size:3em; color:var(--danger);"></i>
+                        <h3 style="margin:15px 0;">Relatório Completo</h3>
                         <button class="btn btn-primary" onclick="gerarPDF()">Gerar PDF</button>
                     </div>
                     <div class="drive-panel" style="text-align:center;">
-                        <i class="fas fa-chart-bar" style="font-size:3em; color:var(--info); margin-bottom:15px;"></i>
-                        <h3>Balancete</h3>
+                        <i class="fas fa-chart-bar" style="font-size:3em; color:var(--info);"></i>
+                        <h3 style="margin:15px 0;">Balancete</h3>
                         <button class="btn btn-primary" onclick="gerarBalancete()">Gerar PDF</button>
                     </div>
                 </div>
             </div>
             
-            <!-- BACKUP -->
             <div class="page" id="backup">
                 <div class="top-bar"><h1>💾 Backup</h1></div>
                 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px;">
                     <div class="drive-panel" style="text-align:center;">
-                        <i class="fas fa-download" style="font-size:3em; color:var(--accent); margin-bottom:15px;"></i>
-                        <h3>Download Backup</h3>
+                        <i class="fas fa-download" style="font-size:3em; color:var(--accent);"></i>
+                        <h3 style="margin:15px 0;">Download</h3>
                         <button class="btn btn-primary" onclick="baixarBackup()">Baixar JSON</button>
                     </div>
                     <div class="drive-panel" style="text-align:center;">
-                        <i class="fas fa-upload" style="font-size:3em; color:var(--success); margin-bottom:15px;"></i>
-                        <h3>Restaurar</h3>
+                        <i class="fas fa-upload" style="font-size:3em; color:var(--success);"></i>
+                        <h3 style="margin:15px 0;">Restaurar</h3>
                         <input type="file" id="restoreFile" accept=".json" style="display:none;" onchange="restaurarBackup(event)">
                         <button class="btn btn-primary" onclick="document.getElementById('restoreFile').click()">Restaurar</button>
                     </div>
@@ -1251,7 +1227,7 @@
         </main>
     </div>
     
-    <!-- Modal Cliente -->
+    <!-- Modal -->
     <div class="modal-overlay" id="clienteModal">
         <div class="modal">
             <h2 id="modalTitle">Novo Cliente</h2>
@@ -1273,7 +1249,7 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        // ==================== FIREBASE CONFIG ====================
+        // ==================== FIREBASE ====================
         const firebaseConfig = {
             apiKey: "AIzaSyBUX_CQmgl62l5zdHjMM9umjWvBTqg8liA",
             authDomain: "kronos-pi.firebaseapp.com",
@@ -1294,14 +1270,14 @@
         
         // ==================== PARTÍCULAS ====================
         function criarParticulas() {
-            const container = document.getElementById('particles');
-            for (let i = 0; i < 30; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 6 + 's';
-                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
-                container.appendChild(particle);
+            const c = document.getElementById('particles');
+            for (let i = 0; i < 25; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDelay = Math.random() * 8 + 's';
+                p.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                c.appendChild(p);
             }
         }
         criarParticulas();
@@ -1320,7 +1296,8 @@
                 document.getElementById('userName').textContent = data.nome || user.email?.split('@')[0] || 'Usuário';
                 document.getElementById('userEmail').textContent = user.email;
                 
-                const saved = localStorage.getItem(`dt_${user.uid}`);
+                // Verificar token Drive salvo
+                const saved = localStorage.getItem(`drive_${user.uid}`);
                 if (saved) {
                     googleToken = saved;
                     updateDriveUI(true);
@@ -1355,10 +1332,17 @@
             const email = document.getElementById('loginEmail').value.trim();
             const pass = document.getElementById('loginPassword').value;
             if (!email || !pass) return showAlert('Preencha todos os campos', 'error');
+            
+            const btn = document.getElementById('loginBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
+            
             try {
                 await auth.signInWithEmailAndPassword(email, pass);
             } catch (e) {
                 showAlert('Email ou senha incorretos', 'error');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> ENTRAR';
             }
         }
         
@@ -1366,8 +1350,14 @@
             const nome = document.getElementById('regNome').value.trim();
             const email = document.getElementById('regEmail').value.trim();
             const pass = document.getElementById('regPassword').value;
+            
             if (!nome || !email || !pass) return showAlert('Preencha todos os campos', 'error');
             if (pass.length < 6) return showAlert('Senha: mínimo 6 caracteres', 'error');
+            
+            const btn = document.getElementById('regBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Criando...';
+            
             try {
                 const result = await auth.createUserWithEmailAndPassword(email, pass);
                 await result.user.updateProfile({ displayName: nome });
@@ -1376,48 +1366,84 @@
                     criadoEm: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 showAlert('Conta criada! Faça login.', 'success');
-                setTimeout(toggleForm, 1500);
+                setTimeout(() => { toggleForm(); btn.disabled = false; btn.innerHTML = '<i class="fas fa-user-plus"></i> CRIAR CONTA'; }, 1500);
             } catch (e) {
                 showAlert(e.code === 'auth/email-already-in-use' ? 'Email já cadastrado' : 'Erro ao criar conta', 'error');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-user-plus"></i> CRIAR CONTA';
             }
         }
         
         async function loginComGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
             provider.addScope('https://www.googleapis.com/auth/drive.readonly');
+            
             try {
                 const result = await auth.signInWithPopup(provider);
-                googleToken = result.credential.accessToken;
-                localStorage.setItem(`dt_${result.user.uid}`, googleToken);
-                updateDriveUI(true);
+                // Pegar token do Google Drive
+                const credential = firebase.auth.GoogleAuthProvider.credentialFromResult(result);
+                if (credential && credential.accessToken) {
+                    googleToken = credential.accessToken;
+                    localStorage.setItem(`drive_${result.user.uid}`, googleToken);
+                    updateDriveUI(true);
+                }
                 showToast('Login com Google realizado!', 'success');
             } catch (e) {
-                console.error(e);
-                showAlert('Erro ao logar com Google', 'error');
+                console.error('Erro Google Login:', e);
+                if (e.code === 'auth/popup-closed-by-user') {
+                    showAlert('Login cancelado', 'error');
+                } else {
+                    showAlert('Erro ao fazer login com Google. Tente novamente.', 'error');
+                }
             }
         }
         
         function logout() {
-            localStorage.removeItem(`dt_${currentUser?.uid}`);
+            localStorage.removeItem(`drive_${currentUser?.uid}`);
             googleToken = null;
             auth.signOut();
         }
         
-        // ==================== GOOGLE DRIVE ====================
+        // ==================== GOOGLE DRIVE (CORRIGIDO) ====================
         async function conectarDrive() {
-            if (!currentUser) return;
+            if (!currentUser) return showToast('Faça login primeiro', 'error');
+            
             const provider = new firebase.auth.GoogleAuthProvider();
             provider.addScope('https://www.googleapis.com/auth/drive.readonly');
+            
             try {
+                // Tenta reconectar com permissões do Drive
                 const result = await currentUser.reauthenticateWithPopup(provider);
-                googleToken = result.credential.accessToken;
-                localStorage.setItem(`dt_${currentUser.uid}`, googleToken);
-                updateDriveUI(true);
-                listarArquivosDrive();
-                showToast('Google Drive conectado!', 'success');
+                const credential = firebase.auth.GoogleAuthProvider.credentialFromResult(result);
+                
+                if (credential && credential.accessToken) {
+                    googleToken = credential.accessToken;
+                    localStorage.setItem(`drive_${currentUser.uid}`, googleToken);
+                    updateDriveUI(true);
+                    listarArquivosDrive();
+                    showToast('Google Drive conectado!', 'success');
+                } else {
+                    // Se não tiver credential, tenta login normal
+                    await auth.signOut();
+                    const newResult = await auth.signInWithPopup(provider);
+                    const newCredential = firebase.auth.GoogleAuthProvider.credentialFromResult(newResult);
+                    if (newCredential && newCredential.accessToken) {
+                        googleToken = newCredential.accessToken;
+                        localStorage.setItem(`drive_${newResult.user.uid}`, googleToken);
+                        updateDriveUI(true);
+                        listarArquivosDrive();
+                        showToast('Google Drive conectado!', 'success');
+                    }
+                }
             } catch (e) {
-                console.error(e);
-                showToast('Erro ao conectar Drive. Tente novamente.', 'error');
+                console.error('Erro Drive:', e);
+                if (e.code === 'auth/popup-closed-by-user') {
+                    showToast('Operação cancelada', 'info');
+                } else if (e.code === 'auth/requires-recent-login') {
+                    showToast('Faça logout e login novamente para conectar o Drive', 'error');
+                } else {
+                    showToast('Erro ao conectar Drive: ' + (e.message || 'Tente novamente'), 'error');
+                }
             }
         }
         
@@ -1433,7 +1459,7 @@
                     area.innerHTML = `
                         <i class="fas fa-check-circle" style="font-size:3em; color:var(--success); margin-bottom:15px; display:block;"></i>
                         <h3>Drive Conectado!</h3>
-                        <p style="color:var(--text-muted);">Seus arquivos aparecerão abaixo</p>
+                        <p style="color:var(--text-muted);">Clique em "Atualizar" para ver seus arquivos</p>
                     `;
                 }
                 if (list) list.style.display = 'block';
@@ -1451,20 +1477,31 @@
             
             const list = document.getElementById('driveFilesList');
             list.style.display = 'block';
-            list.innerHTML = '<p style="text-align:center; padding:30px;"><i class="fas fa-spinner fa-spin"></i> Carregando...</p>';
+            list.innerHTML = '<p style="text-align:center; padding:30px;"><i class="fas fa-spinner fa-spin"></i> Carregando arquivos...</p>';
             
             try {
                 const res = await fetch(
                     'https://www.googleapis.com/drive/v3/files?pageSize=50&fields=files(id,name,mimeType,size,modifiedTime)&orderBy=modifiedTime%20desc&q=mimeType%3D%27text%2Fcsv%27%20or%20mimeType%3D%27application%2Fvnd.google-apps.spreadsheet%27',
                     { headers: { Authorization: `Bearer ${googleToken}` } }
                 );
+                
+                if (!res.ok) {
+                    if (res.status === 401) {
+                        googleToken = null;
+                        localStorage.removeItem(`drive_${currentUser?.uid}`);
+                        updateDriveUI(false);
+                        throw new Error('Token expirado. Reconecte o Drive.');
+                    }
+                    throw new Error('Erro ao acessar Drive');
+                }
+                
                 const data = await res.json();
                 const files = data.files || [];
                 
                 document.getElementById('driveFileCount').textContent = files.length;
                 
                 if (files.length === 0) {
-                    list.innerHTML = '<p style="text-align:center; padding:40px; color:var(--text-muted);">Nenhum arquivo encontrado</p>';
+                    list.innerHTML = '<p style="text-align:center; padding:40px; color:var(--text-muted);">Nenhum arquivo CSV/Planilha encontrado</p>';
                     return;
                 }
                 
@@ -1477,14 +1514,15 @@
                                 <div class="name">${f.name}</div>
                                 <div class="meta">${f.size ? (f.size/1024).toFixed(1)+' KB' : 'Planilha'} • ${new Date(f.modifiedTime).toLocaleDateString('pt-BR')}</div>
                             </div>
-                            <button class="btn btn-google btn-sm"><i class="fas fa-download"></i></button>
+                            <button class="btn btn-google btn-sm"><i class="fas fa-download"></i> Importar</button>
                         </div>
                     `;
                 }).join('');
                 
             } catch (e) {
                 console.error(e);
-                list.innerHTML = '<p style="text-align:center; padding:40px; color:var(--danger);">Erro ao carregar</p>';
+                list.innerHTML = `<p style="text-align:center; padding:40px; color:var(--danger);">${e.message || 'Erro ao carregar arquivos'}</p>`;
+                showToast(e.message || 'Erro ao carregar Drive', 'error');
             }
         }
         
@@ -1506,14 +1544,16 @@
                 if (result.data.length > 0) {
                     await importarDados(result.data, `Drive: ${name}`);
                     showToast(`${result.data.length} clientes importados!`, 'success');
+                } else {
+                    showToast('Nenhum dado encontrado', 'info');
                 }
             } catch (e) {
                 console.error(e);
-                showToast('Erro ao importar', 'error');
+                showToast('Erro ao importar arquivo', 'error');
             }
         }
         
-        // ==================== IMPORTAÇÃO ====================
+        // ==================== IMPORTAÇÃO LOCAL ====================
         function importarLocal(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1562,7 +1602,7 @@
         function exibirClientes(clientes) {
             const tbody = document.getElementById('tabelaClientes');
             if (clientes.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:40px;">Nenhum cliente</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:40px; color:var(--text-muted);">Nenhum cliente</td></tr>';
                 return;
             }
             tbody.innerHTML = clientes.map(c => `
@@ -1606,18 +1646,21 @@
                 email: document.getElementById('clienteEmail').value,
                 telefone: document.getElementById('clienteTelefone').value,
                 empresa: document.getElementById('clienteEmpresa').value,
-                status: document.getElementById('clienteStatus').value,
-                atualizadoPor: currentUser?.email,
-                dataAtualizacao: firebase.firestore.FieldValue.serverTimestamp()
+                status: document.getElementById('clienteStatus').value
             };
             try {
-                if (id) { await db.collection('clientes').doc(id).update(dados); }
-                else { dados.dataCadastro = firebase.firestore.FieldValue.serverTimestamp(); dados.cadastradoPor = currentUser?.email; await db.collection('clientes').add(dados); }
+                if (id) {
+                    await db.collection('clientes').doc(id).update(dados);
+                } else {
+                    dados.dataCadastro = firebase.firestore.FieldValue.serverTimestamp();
+                    dados.cadastradoPor = currentUser?.email;
+                    await db.collection('clientes').add(dados);
+                }
                 fecharModal();
                 carregarClientes();
                 atualizarDashboard();
-                showToast(id ? 'Cliente atualizado!' : 'Cliente cadastrado!', 'success');
-            } catch (err) { showToast('Erro: ' + err.message, 'error'); }
+                showToast(id ? 'Atualizado!' : 'Cadastrado!', 'success');
+            } catch (err) { showToast('Erro', 'error'); }
         }
         
         function editarCliente(id) { const c = todosClientes.find(x => x.id === id); if (c) abrirModalCliente(c); }
@@ -1663,8 +1706,9 @@
             }
             
             document.getElementById('recentClients').innerHTML = todosClientes.slice(0,5).map(c => `
-                <div style="padding:8px 0; border-bottom:1px solid var(--border);">
-                    <strong>${c.nome}</strong> <span class="status-badge ${c.status==='ativo'?'status-active':'status-inactive'}" style="float:right; font-size:0.7em;">${c.status}</span>
+                <div style="padding:10px 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between;">
+                    <span>${c.nome}</span>
+                    <span class="status-badge ${c.status==='ativo'?'status-active':'status-inactive'}">${c.status}</span>
                 </div>
             `).join('') || '<p style="color:var(--text-muted); text-align:center; padding:20px;">Nenhum cliente</p>';
         }
@@ -1691,7 +1735,7 @@
         
         // ==================== BACKUP ====================
         function baixarBackup() {
-            const b = { data: new Date().toISOString(), clientes: todosClientes, total: todosClientes.length };
+            const b = { data: new Date().toISOString(), clientes: todosClientes };
             const blob = new Blob([JSON.stringify(b)], { type: 'application/json' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
@@ -1727,7 +1771,7 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(page)?.classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => {
-                if (n.textContent.toLowerCase().includes(page)) n.classList.add('active');
+                if (n.textContent.toLowerCase().includes(page === 'drive' ? 'drive' : page)) n.classList.add('active');
             });
             if (page === 'dashboard') atualizarDashboard();
             if (page === 'clientes') carregarClientes();
@@ -1753,7 +1797,7 @@
         
         document.addEventListener('click', (e) => { if (e.target.id === 'clienteModal') fecharModal(); });
         
-        console.log('👑 Kronos-PI com Logo K Animada!');
+        console.log('👑 Kronos-PI v2.0 - K girando verticalmente!');
     </script>
 </body>
 </html>
