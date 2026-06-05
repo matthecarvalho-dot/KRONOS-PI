@@ -36,11 +36,14 @@
         .kronos-logo-small .logo-face{background:var(--gold-gradient)}
         .kronos-logo-small .logo-letter{font-size:32px;font-weight:900;color:var(--primary)}
 
-        .login-wrapper{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 20% 50%,rgba(201,168,76,0.08) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(66,133,244,0.05) 0%,transparent 50%),var(--primary);padding:20px}
-        .login-card{background:var(--secondary);border:1px solid var(--border);border-radius:30px;padding:50px 40px;width:100%;max-width:440px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,0.6);animation:fadeInUp 0.6s ease}
+        .login-wrapper{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 20% 50%,rgba(201,168,76,0.08) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(66,133,244,0.05) 0%,transparent 50%),var(--primary);padding:20px;position:relative;overflow:hidden}
+        .particles{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+        .particle{position:absolute;width:3px;height:3px;background:var(--accent);border-radius:50%;animation:floatUp 8s infinite linear;opacity:0}
+        @keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:1}90%{opacity:0.6}100%{transform:translateY(-100px) scale(1.5);opacity:0}}
+        .login-card{background:var(--secondary);border:1px solid var(--border);border-radius:30px;padding:50px 40px;width:100%;max-width:440px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,0.6);animation:fadeInUp 0.6s ease;position:relative;z-index:1}
         @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
         .login-card h1{font-size:2em;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:15px 0 5px;letter-spacing:2px}
-        .login-card .subtitle{color:var(--text-muted);margin-bottom:30px;font-size:0.85em;letter-spacing:3px;text-transform:uppercase}
+        .login-card .subtitle{color:var(--text-muted);margin-bottom:35px;font-size:0.85em;letter-spacing:3px;text-transform:uppercase}
         .btn-google{width:100%;padding:16px;background:white;color:#333;border:none;border-radius:14px;font-size:1em;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;transition:all 0.3s;box-shadow:0 5px 20px rgba(0,0,0,0.2)}
         .btn-google:hover{background:#f8f9fa;transform:translateY(-3px);box-shadow:0 15px 40px rgba(66,133,244,0.3)}
         .btn-google img{width:22px}
@@ -59,6 +62,9 @@
         .nav-item:hover{background:rgba(201,168,76,0.1);color:var(--accent-light);transform:translateX(3px)}
         .nav-item.active{background:rgba(201,168,76,0.15);color:var(--accent);border:1px solid rgba(201,168,76,0.3);font-weight:600}
         .nav-item i{width:18px;text-align:center}
+        .drive-dot{width:7px;height:7px;border-radius:50%;margin-left:auto}
+        .dot-on{background:var(--success);box-shadow:0 0 8px var(--success)}
+        .dot-off{background:var(--text-muted)}
         .user-profile{position:absolute;bottom:20px;left:12px;right:12px;background:var(--primary);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px}
         .user-avatar{width:35px;height:35px;background:var(--gold-gradient);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--primary);font-size:0.8em}
         .user-info{flex:1;font-size:0.75em}
@@ -94,15 +100,15 @@
         .drive-breadcrumb span{color:var(--accent);cursor:pointer;transition:color 0.3s}
         .drive-breadcrumb span:hover{color:var(--accent-light);text-decoration:underline}
         .drive-breadcrumb i{color:var(--text-muted);font-size:0.7em}
-        .drive-files{max-height:450px;overflow-y:auto}
-        .drive-file{display:flex;align-items:center;padding:14px;border-bottom:1px solid var(--border);gap:12px;cursor:pointer;transition:all 0.3s}
+        .drive-files{max-height:500px;overflow-y:auto}
+        .drive-file{display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border);gap:14px;cursor:pointer;transition:all 0.3s}
         .drive-file:hover{background:rgba(66,133,244,0.05)}
-        .file-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2em;flex-shrink:0}
+        .file-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3em;flex-shrink:0}
         .file-icon.folder{background:rgba(251,188,5,0.2);color:#fbbc05}
         .file-icon.sheet{background:rgba(52,168,83,0.2);color:#34a853}
         .file-icon.csv{background:rgba(66,133,244,0.2);color:var(--google-blue)}
-        .file-info{flex:1}
-        .file-info .name{font-weight:600;font-size:0.9em}
+        .file-info{flex:1;min-width:0}
+        .file-info .name{font-weight:600;font-size:0.9em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
         .file-info .meta{font-size:0.75em;color:var(--text-muted)}
 
         .btn{padding:10px 20px;border-radius:10px;font-weight:600;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:8px;transition:all 0.3s;font-size:0.85em;text-transform:uppercase;letter-spacing:0.5px}
@@ -149,8 +155,9 @@
 </head>
 <body>
 
-<!-- LOGIN -->
+<!-- ==================== LOGIN ==================== -->
 <div class="login-wrapper" id="loginScreen">
+    <div class="particles" id="particles"></div>
     <div class="login-card">
         <div class="kronos-logo"><div class="logo-glow"></div><div class="logo-inner"><div class="logo-face logo-front"><span class="logo-letter">K</span></div><div class="logo-face logo-back"><span class="logo-letter">K</span></div></div></div>
         <h1>KRONOS-PI</h1>
@@ -159,11 +166,11 @@
         <button class="btn-google" onclick="loginComGoogle()">
             <img src="https://www.google.com/favicon.ico" alt="G"> Entrar com Google
         </button>
-        <p style="margin-top:20px;color:var(--text-muted);font-size:0.85em;">Faça login com sua conta Google para acessar o sistema e o Drive</p>
+        <p style="margin-top:20px;color:var(--text-muted);font-size:0.85em;">Faça login para acessar o sistema e o Google Drive</p>
     </div>
 </div>
 
-<!-- SISTEMA -->
+<!-- ==================== SISTEMA ==================== -->
 <div class="system-wrapper" id="systemWrapper">
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
@@ -176,7 +183,7 @@
             <div class="nav-item active" onclick="navigateTo('dashboard')"><i class="fas fa-chart-pie"></i> Dashboard</div>
             <div class="nav-item" onclick="navigateTo('clientes')"><i class="fas fa-users"></i> Clientes</div>
             <div class="nav-label">Google Drive</div>
-            <div class="nav-item" onclick="navigateTo('drive')"><i class="fab fa-google-drive"></i> Pastas do Drive</div>
+            <div class="nav-item" onclick="navigateTo('drive')"><i class="fab fa-google-drive"></i> Pastas do Drive <span class="drive-dot dot-off" id="driveDot"></span></div>
             <div class="nav-label">Ferramentas</div>
             <div class="nav-item" onclick="navigateTo('importar')"><i class="fas fa-cloud-upload-alt"></i> Upload CSV</div>
             <div class="nav-item" onclick="navigateTo('relatorios')"><i class="fas fa-file-pdf"></i> Relatórios</div>
@@ -218,7 +225,7 @@
         <div class="page" id="drive">
             <div class="top-bar"><h1>📁 Google Drive</h1><div style="display:flex;gap:8px;"><button class="btn btn-outline btn-sm" onclick="navegarDrive('root')"><i class="fas fa-home"></i> Raiz</button><button class="btn btn-outline btn-sm" onclick="navegarDrive(currentFolderId)"><i class="fas fa-sync-alt"></i> Atualizar</button></div></div>
             <div class="drive-panel">
-                <h3><i class="fab fa-google-drive"></i> Pastas e Arquivos</h3>
+                <h3><i class="fab fa-google-drive"></i> Pastas e Arquivos do Drive</h3>
                 <div class="drive-breadcrumb" id="driveBreadcrumb"><span onclick="navegarDrive('root')">📁 Meu Drive</span></div>
                 <div class="drive-connect-area" id="driveConnectArea">
                     <i class="fab fa-google-drive" style="font-size:4em;color:var(--text-muted);margin-bottom:15px;display:block;"></i>
@@ -261,7 +268,7 @@
     </main>
 </div>
 
-<!-- Modal -->
+<!-- Modal Cliente -->
 <div class="modal-overlay" id="clienteModal">
     <div class="modal"><h2 id="modalTitle">Novo Cliente</h2><form id="clienteForm" onsubmit="salvarCliente(event)"><input type="hidden" id="clienteId"><div class="form-group"><label>Nome *</label><input type="text" id="clienteNome" required></div><div class="form-group"><label>Email *</label><input type="email" id="clienteEmail" required></div><div class="form-group"><label>Telefone *</label><input type="tel" id="clienteTelefone" required></div><div class="form-group"><label>Empresa</label><input type="text" id="clienteEmpresa"></div><div class="form-group"><label>Status</label><select id="clienteStatus"><option value="ativo">Ativo</option><option value="inativo">Inativo</option></select></div><div class="modal-actions"><button type="button" class="btn btn-outline" onclick="fecharModal()">Cancelar</button><button type="submit" class="btn btn-primary">Salvar</button></div></form></div>
 </div>
@@ -282,26 +289,38 @@ const db = firebase.firestore();
 const auth = firebase.auth();
 
 let currentUser = null, todosClientes = [], googleToken = null, currentFolderId = 'root';
-let folderHistory = [];
 
-// ==================== AUTH ====================
+// ==================== PARTÍCULAS ====================
+(function(){const c=document.getElementById('particles');for(let i=0;i<25;i++){const p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.animationDelay=Math.random()*8+'s';p.style.animationDuration=(Math.random()*4+4)+'s';c.appendChild(p);}})();
+
+// ==================== LOGIN COM GOOGLE ====================
 async function loginComGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.addScope('https://www.googleapis.com/auth/drive.readonly');
+    provider.setCustomParameters({ prompt: 'select_account' });
     try {
         const result = await auth.signInWithPopup(provider);
         const credential = firebase.auth.GoogleAuthProvider.credentialFromResult(result);
         if (credential && credential.accessToken) {
             googleToken = credential.accessToken;
             localStorage.setItem('googleToken', googleToken);
+            updateDriveDot(true);
+            console.log('✅ Token Drive obtido');
         }
         showToast('✅ Login realizado!', 'success');
     } catch(e) {
-        console.error(e);
-        showAlert('Erro ao fazer login. Tente novamente.', 'error');
+        console.error('Erro login:', e);
+        if (e.code === 'auth/popup-closed-by-user') showAlert('Login cancelado', 'error');
+        else showAlert('Erro ao fazer login: ' + e.message, 'error');
     }
 }
 
+function updateDriveDot(connected) {
+    const dot = document.getElementById('driveDot');
+    if (dot) dot.className = 'drive-dot ' + (connected ? 'dot-on' : 'dot-off');
+}
+
+// ==================== AUTH STATE ====================
 auth.onAuthStateChanged(async (user) => {
     if (user) {
         currentUser = user;
@@ -312,32 +331,32 @@ auth.onAuthStateChanged(async (user) => {
         document.getElementById('userEmail').textContent = user.email;
         
         const saved = localStorage.getItem('googleToken');
-        if (saved) googleToken = saved;
+        if (saved) { googleToken = saved; updateDriveDot(true); }
         
         carregarClientes();
         atualizarDashboard();
-        
-        // Carregar Drive se já estiver na página
-        if (document.getElementById('drive').classList.contains('active') && googleToken) {
-            navegarDrive('root');
-        }
     } else {
         document.getElementById('loginScreen').style.display = 'flex';
         document.getElementById('systemWrapper').classList.remove('active');
     }
 });
 
-function logout() {
-    localStorage.removeItem('googleToken');
-    googleToken = null;
-    auth.signOut();
-}
+function logout() { localStorage.removeItem('googleToken'); googleToken = null; updateDriveDot(false); auth.signOut(); }
 
-// ==================== GOOGLE DRIVE ====================
+// ==================== GOOGLE DRIVE - NAVEGAÇÃO DE PASTAS ====================
 async function navegarDrive(folderId) {
     if (!googleToken) {
-        showToast('Faça login com Google primeiro', 'info');
-        return;
+        const saved = localStorage.getItem('googleToken');
+        if (saved) { googleToken = saved; updateDriveDot(true); }
+        else {
+            document.getElementById('driveConnectArea').style.display = 'block';
+            document.getElementById('driveConnectArea').innerHTML = `
+                <i class="fab fa-google-drive" style="font-size:4em;color:var(--text-muted);margin-bottom:15px;display:block;"></i>
+                <h3>Drive não conectado</h3>
+                <p style="color:var(--text-muted);margin:10px 0 20px;">Faça login novamente</p>
+                <button class="btn btn-google" onclick="loginComGoogle()"><i class="fab fa-google"></i> Conectar Google Drive</button>`;
+            return;
+        }
     }
     
     currentFolderId = folderId;
@@ -345,54 +364,54 @@ async function navegarDrive(folderId) {
     const area = document.getElementById('driveConnectArea');
     const breadcrumb = document.getElementById('driveBreadcrumb');
     
-    list.style.display = 'block';
     if (area) area.style.display = 'none';
-    list.innerHTML = '<p style="text-align:center;padding:40px;"><i class="fas fa-spinner fa-spin"></i> Carregando...</p>';
+    list.style.display = 'block';
+    list.innerHTML = '<p style="text-align:center;padding:40px;"><i class="fas fa-spinner fa-spin"></i> Carregando arquivos do Drive...</p>';
     
     try {
-        // Buscar pastas primeiro, depois arquivos
+        // Buscar pastas
         const folderQuery = `'${folderId}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`;
-        const fileQuery = `'${folderId}' in parents and (mimeType='text/csv' or mimeType='application/vnd.google-apps.spreadsheet' or mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') and trashed=false`;
+        const folderUrl = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(folderQuery)}&fields=files(id,name)&orderBy=name&pageSize=100`;
         
-        const [foldersRes, filesRes] = await Promise.all([
-            fetch(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(folderQuery)}&fields=files(id,name,createdTime)&orderBy=name&pageSize=100`, { headers: { Authorization: `Bearer ${googleToken}` } }),
-            fetch(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(fileQuery)}&fields=files(id,name,mimeType,size,modifiedTime)&orderBy=name&pageSize=100`, { headers: { Authorization: `Bearer ${googleToken}` } })
-        ]);
+        console.log('🔍 Buscando pastas em:', folderId);
+        const foldersRes = await fetch(folderUrl, { headers: { Authorization: `Bearer ${googleToken}` } });
+        
+        if (!foldersRes.ok) {
+            if (foldersRes.status === 401) {
+                googleToken = null; localStorage.removeItem('googleToken'); updateDriveDot(false);
+                list.innerHTML = '<p style="text-align:center;padding:40px;color:var(--danger);">Sessão expirada. <a onclick="loginComGoogle()" style="color:var(--accent);cursor:pointer;">Fazer login</a></p>';
+                return;
+            }
+            throw new Error(`Erro ${foldersRes.status}`);
+        }
         
         const foldersData = await foldersRes.json();
-        const filesData = await filesRes.json();
         const folders = foldersData.files || [];
+        console.log(`📁 ${folders.length} pastas encontradas`);
+        
+        // Buscar arquivos
+        const fileQuery = `'${folderId}' in parents and (mimeType='text/csv' or mimeType='application/vnd.google-apps.spreadsheet' or mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') and trashed=false`;
+        const fileUrl = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(fileQuery)}&fields=files(id,name,mimeType,size,modifiedTime)&orderBy=name&pageSize=100`;
+        
+        console.log('🔍 Buscando arquivos...');
+        const filesRes = await fetch(fileUrl, { headers: { Authorization: `Bearer ${googleToken}` } });
+        const filesData = await filesRes.json();
         const files = filesData.files || [];
+        console.log(`📄 ${files.length} arquivos encontrados`);
         
         document.getElementById('driveFolderCount').textContent = folders.length;
-        
-        // Atualizar breadcrumb
         updateBreadcrumb(folderId);
         
         let html = '';
         
-        // Botão voltar (se não for raiz)
+        // Botão voltar
         if (folderId !== 'root') {
-            html += `
-                <div class="drive-file" onclick="voltarPasta()" style="background:rgba(201,168,76,0.08);">
-                    <div class="file-icon folder"><i class="fas fa-arrow-left"></i></div>
-                    <div class="file-info"><div class="name">⬅ Voltar</div></div>
-                </div>`;
+            html += `<div class="drive-file" onclick="navegarDrive('root')" style="background:rgba(201,168,76,0.08);"><div class="file-icon folder"><i class="fas fa-arrow-left"></i></div><div class="file-info"><div class="name">⬅ Voltar para raiz</div></div></div>`;
         }
         
         // Pastas
         folders.forEach(f => {
-            html += `
-                <div class="drive-file" onclick="navegarDrive('${f.id}')">
-                    <div class="file-icon folder"><i class="fas fa-folder"></i></div>
-                    <div class="file-info">
-                        <div class="name">📁 ${f.name}</div>
-                        <div class="meta">Pasta</div>
-                    </div>
-                    <button class="btn btn-outline btn-xs" onclick="event.stopPropagation();importarPastaInteira('${f.id}','${f.name.replace(/'/g,"\\'")}')">
-                        <i class="fas fa-download"></i> Importar Tudo
-                    </button>
-                </div>`;
+            html += `<div class="drive-file" onclick="navegarDrive('${f.id}')"><div class="file-icon folder"><i class="fas fa-folder"></i></div><div class="file-info"><div class="name">📁 ${f.name}</div><div class="meta">Pasta de clientes</div></div><button class="btn btn-outline btn-xs" onclick="event.stopPropagation();importarPastaInteira('${f.id}','${f.name.replace(/'/g,"\\'")}')"><i class="fas fa-download"></i> Importar tudo</button></div>`;
         });
         
         // Arquivos
@@ -400,60 +419,34 @@ async function navegarDrive(folderId) {
             const isSheet = f.mimeType.includes('spreadsheet');
             const icon = isSheet ? 'fa-file-excel' : 'fa-file-csv';
             const iconClass = isSheet ? 'sheet' : 'csv';
-            const size = f.size ? (f.size / 1024).toFixed(1) + ' KB' : 'Planilha';
-            const date = new Date(f.modifiedTime).toLocaleDateString('pt-BR');
+            const size = f.size ? (f.size/1024).toFixed(1)+' KB' : 'Planilha';
+            const date = f.modifiedTime ? new Date(f.modifiedTime).toLocaleDateString('pt-BR') : 'N/A';
             
-            html += `
-                <div class="drive-file" onclick="importarDoDrive('${f.id}','${f.name.replace(/'/g,"\\'")}','${f.mimeType}')">
-                    <div class="file-icon ${iconClass}"><i class="fas ${icon}"></i></div>
-                    <div class="file-info">
-                        <div class="name">${f.name}</div>
-                        <div class="meta">${size} • ${date}</div>
-                    </div>
-                    <button class="btn btn-google btn-xs" onclick="event.stopPropagation();importarDoDrive('${f.id}','${f.name.replace(/'/g,"\\'")}','${f.mimeType}')">
-                        <i class="fas fa-download"></i> Importar
-                    </button>
-                </div>`;
+            html += `<div class="drive-file" onclick="importarDoDrive('${f.id}','${f.name.replace(/'/g,"\\'")}','${f.mimeType}')"><div class="file-icon ${iconClass}"><i class="fas ${icon}"></i></div><div class="file-info"><div class="name">${f.name}</div><div class="meta">${size} • ${date}</div></div><button class="btn btn-google btn-xs" onclick="event.stopPropagation();importarDoDrive('${f.id}','${f.name.replace(/'/g,"\\'")}','${f.mimeType}')"><i class="fas fa-download"></i> Importar</button></div>`;
         });
         
-        if (!html) html = '<p style="text-align:center;padding:40px;color:var(--text-muted);">Pasta vazia</p>';
+        if (!html) html = '<p style="text-align:center;padding:60px;color:var(--text-muted);"><i class="fas fa-folder-open" style="font-size:3em;margin-bottom:15px;display:block;opacity:0.3;"></i>Pasta vazia</p>';
         list.innerHTML = html;
         
     } catch(e) {
-        console.error(e);
-        list.innerHTML = '<p style="text-align:center;padding:40px;color:var(--danger);">Erro ao carregar</p>';
+        console.error('❌ Erro Drive:', e);
+        list.innerHTML = `<p style="text-align:center;padding:40px;color:var(--danger);">Erro ao carregar. <a onclick="navegarDrive('root')" style="color:var(--accent);cursor:pointer;">Tentar novamente</a></p>`;
     }
 }
 
 function updateBreadcrumb(folderId) {
-    const breadcrumb = document.getElementById('driveBreadcrumb');
-    breadcrumb.innerHTML = '<span onclick="navegarDrive(\'root\')">📁 Meu Drive</span>';
-}
-
-function voltarPasta() {
-    if (folderHistory.length > 0) {
-        const prevFolder = folderHistory.pop();
-        navegarDrive(prevFolder);
-    } else {
-        navegarDrive('root');
-    }
+    document.getElementById('driveBreadcrumb').innerHTML = '<span onclick="navegarDrive(\'root\')">📁 Meu Drive</span>';
 }
 
 async function importarPastaInteira(folderId, folderName) {
     if (!confirm(`Importar TODOS os arquivos da pasta "${folderName}"?`)) return;
     showToast(`Importando pasta ${folderName}...`, 'info');
-    
     try {
         const query = `'${folderId}' in parents and (mimeType='text/csv' or mimeType='application/vnd.google-apps.spreadsheet') and trashed=false`;
-        const res = await fetch(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&fields=files(id,name,mimeType)&pageSize=100`,
-            { headers: { Authorization: `Bearer ${googleToken}` } });
+        const res = await fetch(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}&fields=files(id,name,mimeType)&pageSize=100`, { headers: { Authorization: `Bearer ${googleToken}` } });
         const data = await res.json();
-        const files = data.files || [];
-        
-        for (const file of files) {
-            await importarDoDrive(file.id, file.name, file.mimeType);
-        }
-        showToast(`${files.length} arquivos importados!`, 'success');
+        for (const file of (data.files || [])) { await importarDoDrive(file.id, file.name, file.mimeType); }
+        showToast(`${(data.files||[]).length} arquivos importados!`, 'success');
     } catch(e) { showToast('Erro ao importar pasta', 'error'); }
 }
 
@@ -469,17 +462,14 @@ async function importarDoDrive(fileId, fileName, mimeType) {
             content = await res.text();
         }
         const result = Papa.parse(content, { header: true, skipEmptyLines: true });
-        if (result.data.length > 0) {
-            await importarDados(result.data, `Drive: ${fileName}`);
-            showToast(`${result.data.length} clientes importados!`, 'success');
-        } else showToast('Nenhum dado encontrado', 'info');
+        if (result.data.length > 0) { await importarDados(result.data, `Drive: ${fileName}`); showToast(`${result.data.length} clientes importados!`, 'success'); }
+        else showToast('Nenhum dado encontrado', 'info');
     } catch(e) { showToast('Erro ao importar', 'error'); }
 }
 
 // ==================== IMPORTAÇÃO LOCAL ====================
 function importarLocal(event) {
-    const file = event.target.files[0];
-    if (!file) return;
+    const file = event.target.files[0]; if (!file) return;
     Papa.parse(file, { header: true, skipEmptyLines: true, complete: async (r) => {
         if (r.data.length > 0) { await importarDados(r.data, `Upload: ${file.name}`); showToast(`${r.data.length} clientes importados!`, 'success'); }
         event.target.value = '';
@@ -506,8 +496,7 @@ async function importarDados(dados, origem) {
 // ==================== CLIENTES ====================
 async function carregarClientes() {
     const snap = await db.collection('clientes').orderBy('dataCadastro', 'desc').get();
-    todosClientes = [];
-    snap.forEach(d => todosClientes.push({ id: d.id, ...d.data() }));
+    todosClientes = []; snap.forEach(d => todosClientes.push({ id: d.id, ...d.data() }));
     exibirClientes(todosClientes);
 }
 
@@ -555,21 +544,27 @@ function gerarBalancete() { const { jsPDF } = window.jspdf; const d = new jsPDF(
 function baixarBackup() { const b = { data: new Date().toISOString(), clientes: todosClientes }; const bl = new Blob([JSON.stringify(b)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(bl); a.download = `kronos-backup-${new Date().toISOString().split('T')[0]}.json`; a.click(); showToast('Backup baixado!', 'success'); }
 async function restaurarBackup(event) { const f = event.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = async (e) => { try { const b = JSON.parse(e.target.result); if (b.clientes && confirm(`Restaurar ${b.clientes.length} clientes?`)) { const batch = db.batch(); b.clientes.forEach(c => batch.set(db.collection('clientes').doc(), c)); await batch.commit(); carregarClientes(); atualizarDashboard(); showToast('Restaurado!', 'success'); } } catch { showToast('Arquivo inválido', 'error'); } }; r.readAsText(f); event.target.value = ''; }
 
-// ==================== UTILITÁRIOS ====================
+// ==================== NAVEGAÇÃO ====================
 function navigateTo(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById(page)?.classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(n => { if (n.textContent.toLowerCase().includes(page === 'drive' ? 'drive' : page === 'importar' ? 'upload' : page)) n.classList.add('active'); });
+    document.querySelectorAll('.nav-item').forEach(n => { if (n.textContent.toLowerCase().includes(page === 'drive' ? 'drive' : page)) n.classList.add('active'); });
     if (page === 'dashboard') atualizarDashboard();
     if (page === 'clientes') carregarClientes();
-    if (page === 'drive' && googleToken) navegarDrive('root');
+    if (page === 'drive') {
+        if (!googleToken) { const saved = localStorage.getItem('googleToken'); if (saved) { googleToken = saved; updateDriveDot(true); } }
+        if (googleToken) { setTimeout(() => navegarDrive('root'), 300); }
+        else { document.getElementById('driveConnectArea').style.display = 'block'; document.getElementById('driveFilesList').style.display = 'none'; }
+    }
 }
 
 function atualizarTudo() { carregarClientes(); atualizarDashboard(); if (googleToken) navegarDrive(currentFolderId); showToast('Atualizado!', 'success'); }
 function showToast(msg, type = 'info') { const t = document.createElement('div'); t.className = `toast toast-${type}`; t.textContent = msg; document.getElementById('toastContainer').appendChild(t); setTimeout(() => t.remove(), 3500); }
 function showAlert(msg, type) { const a = document.getElementById('alertMessage'); a.textContent = msg; a.className = `alert-msg alert-${type}`; setTimeout(() => a.style.display = 'none', 4000); }
 document.addEventListener('click', (e) => { if (e.target.id === 'clienteModal') fecharModal(); });
+
+console.log('👑 Kronos-PI v3.0 - Pronto!');
 </script>
 </body>
 </html>
