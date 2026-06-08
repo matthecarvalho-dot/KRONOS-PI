@@ -17,7 +17,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     
     <style>
-        :root{--primary:#0a0e27;--secondary:#1a1f3a;--accent:#c9a84c;--gold-gradient:linear-gradient(135deg,#c9a84c 0%,#e0c878 50%,#c9a84c 100%);--text:#fff;--text-secondary:#a0a3b1;--text-muted:#6b6e7e;--border:#2a2f45;--card:#141832;--sidebar:260px;--success:#00c853;--danger:#ff1744;--warning:#ff9800;--info:#00b0ff;--purple:#9c27b0;--google:#4285f4}
+        :root{--primary:#0a0e27;--secondary:#1a1f3a;--accent:#c9a84c;--gold-gradient:linear-gradient(135deg,#c9a84c 0%,#e0c878 50%,#c9a84c 100%);--text:#fff;--text-secondary:#a0a3b1;--text-muted:#6b6e7e;--border:#2a2f45;--card:#141832;--sidebar:260px;--success:#00c853;--danger:#ff1744;--warning:#ff9800;--info:#00b0ff;--purple:#9c27b0}
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:'Segoe UI',sans-serif;background:var(--primary);color:var(--text);min-height:100vh}
         
@@ -113,9 +113,6 @@
         .upload-area{border:2px dashed var(--border);border-radius:20px;padding:50px 30px;text-align:center;cursor:pointer;transition:.3s;margin-bottom:20px}
         .upload-area:hover,.upload-area.dragover{border-color:var(--accent);background:rgba(201,168,76,.03)}
         .upload-area i{font-size:3em;color:var(--text-muted);margin-bottom:15px;display:block}
-        .upload-area h3{margin-bottom:10px}
-        .upload-area p{color:var(--text-muted);font-size:.9em}
-        .upload-area input{display:none}
 
         .import-progress{display:none;margin-top:20px}
         .progress-bar{width:100%;height:8px;background:var(--primary);border-radius:4px;overflow:hidden;margin-bottom:10px}
@@ -217,17 +214,27 @@
         
         <!-- IMPORTAR PASTAS -->
         <div class="page" id="importar">
-            <div class="top-bar"><h1>📁 Importar Pastas CSV</h1></div>
+            <div class="top-bar"><h1>📁 Importar Pastas do Pen Drive</h1></div>
             <div class="panel">
-                <h3>Selecione uma ou mais pastas</h3>
-                <p style="color:var(--text-muted);margin-bottom:20px;">Todos os arquivos CSV dentro das pastas serão importados. Formatos aceitos: CSV com colunas (nome, email, telefone, empresa, status)</p>
+                <h3>📂 Selecione a pasta do seu pen drive</h3>
+                <p style="color:var(--text-muted);margin-bottom:10px;">Todos os arquivos CSV/TXT dentro da pasta serão importados</p>
+                <p style="color:var(--accent);margin-bottom:20px;font-weight:600;">💡 Dica: Selecione a PASTA inteira, não os arquivos individuais</p>
                 
-                <div class="upload-area" id="uploadArea">
+                <!-- OPÇÃO 1: Selecionar pasta -->
+                <div class="upload-area" id="uploadArea" onclick="document.getElementById('folderInput').click()">
                     <i class="fas fa-folder-plus"></i>
-                    <h3>Clique aqui para selecionar PASTAS</h3>
-                    <p>ou arraste pastas para esta área</p>
-                    <p style="color:var(--accent);margin-top:10px;font-weight:600;">⚠️ Selecione a PASTA inteira, não arquivos individuais</p>
-                    <input type="file" id="folderInput" webkitdirectory multiple>
+                    <h3>CLIQUE AQUI PARA SELECIONAR A PASTA</h3>
+                    <p>Formatos aceitos: CSV, TXT, XLSX</p>
+                </div>
+                <input type="file" id="folderInput" webkitdirectory directory multiple style="display:none">
+                
+                <!-- OPÇÃO 2: Selecionar múltiplos arquivos -->
+                <div style="text-align:center;margin-top:15px;padding:20px;background:var(--primary);border-radius:12px;">
+                    <p style="color:var(--text-muted);margin-bottom:10px;">📂 Ou selecione múltiplos arquivos diretamente:</p>
+                    <input type="file" id="multiFileInput" accept=".csv,.txt,.xlsx,.xls" multiple style="display:none">
+                    <button class="btn-action btn-outline" onclick="document.getElementById('multiFileInput').click()">
+                        <i class="fas fa-file-upload"></i> Selecionar Arquivos
+                    </button>
                 </div>
                 
                 <div class="import-progress" id="importProgress">
@@ -236,27 +243,12 @@
                 </div>
                 <div class="file-list" id="fileList"></div>
             </div>
-            
-            <!-- Upload de arquivo único -->
-            <div class="panel" style="text-align:center;margin-top:20px;">
-                <h3>📄 Ou faça upload de um arquivo CSV único</h3>
-                <input type="file" id="singleFileInput" accept=".csv" style="display:none" onchange="importarCSV(event)">
-                <button class="btn-action btn-primary" onclick="document.getElementById('singleFileInput').click()" style="margin-top:10px;"><i class="fas fa-upload"></i> Selecionar Arquivo</button>
-            </div>
         </div>
         
         <!-- USUÁRIOS (ADMIN) -->
         <div class="page" id="usuarios">
             <div class="top-bar"><h1>👥 Gerenciar Usuários</h1></div>
-            <div class="panel">
-                <h3>Todos os Usuários do Sistema</h3>
-                <div class="table-container" style="margin-top:15px;">
-                    <table class="data-table">
-                        <thead><tr><th>Usuário</th><th>Email</th><th>Cargo/Função</th><th>Data Cadastro</th><th>Último Acesso</th><th>Ações</th></tr></thead>
-                        <tbody id="tabelaUsuarios"></tbody>
-                    </table>
-                </div>
-            </div>
+            <div class="panel"><h3>Todos os Usuários</h3><div class="table-container" style="margin-top:15px;"><table class="data-table"><thead><tr><th>Usuário</th><th>Email</th><th>Cargo</th><th>Cadastro</th><th>Ações</th></tr></thead><tbody id="tabelaUsuarios"></tbody></table></div></div>
         </div>
         
         <!-- RELATÓRIOS -->
@@ -296,29 +288,19 @@ auth.onAuthStateChanged(async user=>{
         u=user;
         document.getElementById('loginScreen').style.display='none';
         document.getElementById('systemWrapper').classList.add('active');
-        
-        // Carregar dados do usuário
         const userDoc=await db.collection('usuarios').doc(user.uid).get();
         const userData=userDoc.data()||{};
         userRole=userData.role||'user';
-        
         document.getElementById('userAvatar').textContent=(userData.nome||user.email||'U').substring(0,2).toUpperCase();
         document.getElementById('userName').textContent=userData.nome||user.email?.split('@')[0]||'Usuário';
         document.getElementById('userEmail').textContent=user.email;
-        
-        // Mostrar badge do cargo
         const badge=document.getElementById('userRoleBadge');
         if(userRole==='admin'){
             badge.innerHTML='<span class="badge badge-admin">ADMIN</span>';
             document.getElementById('adminLabel').style.display='block';
             document.getElementById('adminMenuItem').style.display='flex';
-        }else{
-            badge.innerHTML=`<span class="badge badge-user">${userRole||'Usuário'}</span>`;
-        }
-        
-        // Atualizar último acesso
+        }else{badge.innerHTML=`<span class="badge badge-user">${userRole||'Usuário'}</span>`}
         await db.collection('usuarios').doc(user.uid).update({ultimoAcesso:firebase.firestore.FieldValue.serverTimestamp()}).catch(()=>{});
-        
         await loadStatus();
         carregarClientes();
     }else{
@@ -327,197 +309,74 @@ auth.onAuthStateChanged(async user=>{
     }
 });
 
-function toggleForm(){
-    isRegister=!isRegister;
-    document.getElementById('loginFormArea').style.display=isRegister?'none':'block';
-    document.getElementById('registerFormArea').style.display=isRegister?'block':'none';
-    document.getElementById('toggleText').textContent=isRegister?'Já tem conta?':'Não tem conta?';
-}
-
-async function fazerLogin(){
-    const e=document.getElementById('loginEmail').value.trim(),p=document.getElementById('loginPassword').value;
-    if(!e||!p)return alertMsg('Preencha todos os campos','error');
-    try{await auth.signInWithEmailAndPassword(e,p)}catch{alertMsg('Email ou senha incorretos','error')}
-}
-
-async function criarConta(){
-    const n=document.getElementById('regNome').value.trim(),e=document.getElementById('regEmail').value.trim(),p=document.getElementById('regPassword').value;
-    if(!n||!e||!p)return alertMsg('Preencha todos os campos','error');
-    if(p.length<6)return alertMsg('Senha: mínimo 6 caracteres','error');
-    try{
-        const r=await auth.createUserWithEmailAndPassword(e,p);
-        await r.user.updateProfile({displayName:n});
-        await db.collection('usuarios').doc(r.user.uid).set({nome:n,email:e,role:'user',criadoEm:firebase.firestore.FieldValue.serverTimestamp()});
-        alertMsg('Conta criada! Faça login.','success');
-        setTimeout(toggleForm,1500);
-    }catch(ex){alertMsg('Erro ao criar conta','error')}
-}
-
-async function loginGoogle(){
-    const p=new firebase.auth.GoogleAuthProvider();
-    try{
-        const r=await auth.signInWithPopup(p);
-        // Salvar usuário se não existir
-        const d=await db.collection('usuarios').doc(r.user.uid).get();
-        if(!d.exists){
-            await db.collection('usuarios').doc(r.user.uid).set({nome:r.user.displayName,email:r.user.email,role:'user',criadoEm:firebase.firestore.FieldValue.serverTimestamp()});
-        }
-    }catch(e){if(e.code!=='auth/popup-closed-by-user')alertMsg('Erro','error')}
-}
-
+function toggleForm(){isRegister=!isRegister;document.getElementById('loginFormArea').style.display=isRegister?'none':'block';document.getElementById('registerFormArea').style.display=isRegister?'block':'none';document.getElementById('toggleText').textContent=isRegister?'Já tem conta?':'Não tem conta?'}
+async function fazerLogin(){const e=document.getElementById('loginEmail').value.trim(),p=document.getElementById('loginPassword').value;if(!e||!p)return alertMsg('Preencha todos os campos','error');try{await auth.signInWithEmailAndPassword(e,p)}catch{alertMsg('Email ou senha incorretos','error')}}
+async function criarConta(){const n=document.getElementById('regNome').value.trim(),e=document.getElementById('regEmail').value.trim(),p=document.getElementById('regPassword').value;if(!n||!e||!p)return alertMsg('Preencha todos os campos','error');if(p.length<6)return alertMsg('Senha: mínimo 6 caracteres','error');try{const r=await auth.createUserWithEmailAndPassword(e,p);await r.user.updateProfile({displayName:n});await db.collection('usuarios').doc(r.user.uid).set({nome:n,email:e,role:'user',criadoEm:firebase.firestore.FieldValue.serverTimestamp()});alertMsg('Conta criada! Faça login.','success');setTimeout(toggleForm,1500)}catch(ex){alertMsg('Erro ao criar conta','error')}}
+async function loginGoogle(){const p=new firebase.auth.GoogleAuthProvider();try{const r=await auth.signInWithPopup(p);const d=await db.collection('usuarios').doc(r.user.uid).get();if(!d.exists){await db.collection('usuarios').doc(r.user.uid).set({nome:r.user.displayName,email:r.user.email,role:'user',criadoEm:firebase.firestore.FieldValue.serverTimestamp()})}}catch(e){if(e.code!=='auth/popup-closed-by-user')alertMsg('Erro','error')}}
 function logout(){auth.signOut()}
 
-async function loadStatus(){
-    const s=await db.collection('config').doc('status').get();
-    statusList=s.exists&&s.data().list?s.data().list:[...defaultStatus];
-    if(!s.exists)await db.collection('config').doc('status').set({list:statusList});
-    updateStatusUI();
-}
-
-function updateStatusUI(){
-    const sel=document.getElementById('clienteStatus'),filt=document.getElementById('filterStatus'),list=document.getElementById('statusList');
-    if(sel)sel.innerHTML=statusList.map(s=>`<option value="${s.name}">${s.name}</option>`).join('');
-    if(filt)filt.innerHTML='<option value="todos">Todos</option>'+statusList.map(s=>`<option value="${s.name}">${s.name}</option>`).join('');
-    if(list)list.innerHTML=statusList.map(s=>`<span class="badge" style="background:${s.color}20;color:${s.color};border:1px solid ${s.color}40;cursor:pointer;padding:8px 14px;margin:4px">${s.name} <i class="fas fa-times" style="margin-left:5px;font-size:.7em" onclick="event.stopPropagation();deleteStatus('${s.name}')"></i></span>`).join('');
-}
-
-async function addStatus(){const n=document.getElementById('newStatusName').value.trim(),c=document.getElementById('newStatusColor').value;if(!n)return toast('Digite um nome','error');if(statusList.find(s=>s.name.toLowerCase()===n.toLowerCase()))return toast('Já existe','error');statusList.push({name:n,color:c,badge:'badge-'+n.toLowerCase().replace(/\s/g,'-')});await db.collection('config').doc('status').set({list:statusList});updateStatusUI();carregarClientes();toast('Adicionado!','success')}
+async function loadStatus(){const s=await db.collection('config').doc('status').get();statusList=s.exists&&s.data().list?s.data().list:[...defaultStatus];if(!s.exists)await db.collection('config').doc('status').set({list:statusList});updateStatusUI()}
+function updateStatusUI(){const sel=document.getElementById('clienteStatus'),filt=document.getElementById('filterStatus'),list=document.getElementById('statusList');if(sel)sel.innerHTML=statusList.map(s=>`<option value="${s.name}">${s.name}</option>`).join('');if(filt)filt.innerHTML='<option value="todos">Todos</option>'+statusList.map(s=>`<option value="${s.name}">${s.name}</option>`).join('');if(list)list.innerHTML=statusList.map(s=>`<span class="badge" style="background:${s.color}20;color:${s.color};border:1px solid ${s.color}40;cursor:pointer;padding:8px 14px;margin:4px">${s.name} <i class="fas fa-times" style="margin-left:5px;font-size:.7em" onclick="event.stopPropagation();deleteStatus('${s.name}')"></i></span>`).join('')}
+async function addStatus(){const n=document.getElementById('newStatusName').value.trim(),c=document.getElementById('newStatusColor').value;if(!n)return toast('Digite um nome','error');statusList.push({name:n,color:c,badge:'badge-'+n.toLowerCase().replace(/\s/g,'-')});await db.collection('config').doc('status').set({list:statusList});updateStatusUI();carregarClientes();toast('Adicionado!','success')}
 async function deleteStatus(name){if(!confirm(`Remover "${name}"?`))return;statusList=statusList.filter(s=>s.name!==name);await db.collection('config').doc('status').set({list:statusList});updateStatusUI();carregarClientes();toast('Removido!','success')}
 function getBadge(s){const f=statusList.find(x=>x.name===s);return f?f.badge:'badge-ativo'}
 
-async function carregarClientes(){
-    const s=await db.collection('clientes').orderBy('dataCadastro','desc').get();
-    clientes=[];s.forEach(d=>clientes.push({id:d.id,...d.data()}));
-    filtrar();updateDashboard();
-}
+async function carregarClientes(){const s=await db.collection('clientes').orderBy('dataCadastro','desc').get();clientes=[];s.forEach(d=>clientes.push({id:d.id,...d.data()}));filtrar();updateDashboard()}
+function filtrar(){const b=document.getElementById('searchCliente')?.value?.toLowerCase()||'',s=document.getElementById('filterStatus')?.value||'todos',o=document.getElementById('sortOrder')?.value||'nome-asc';let f=[...clientes];if(b)f=f.filter(c=>(c.nome||'').toLowerCase().includes(b)||(c.email||'').toLowerCase().includes(b)||(c.telefone||'').includes(b));if(s!=='todos')f=f.filter(c=>c.status===s);if(o==='nome-asc')f.sort((a,b)=>(a.nome||'').localeCompare(b.nome||''));else if(o==='nome-desc')f.sort((a,b)=>(b.nome||'').localeCompare(a.nome||''));else f.sort((a,b)=>(b.dataCadastro?.toDate()||0)-(a.dataCadastro?.toDate()||0));const t=document.getElementById('tabelaClientes');if(!f.length){t.innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;">Nenhum cliente</td></tr>';return}t.innerHTML=f.map(c=>`<tr><td><strong>${c.nome}</strong></td><td>${c.email||'-'}</td><td>${c.telefone||'-'}</td><td><span class="badge ${getBadge(c.status)}">${c.status||'Ativo'}</span></td><td style="font-size:.75em;color:var(--text-muted)">${c.pasta||'-'}</td><td><button class="btn-action btn-outline btn-xs" onclick="editarCliente('${c.id}')"><i class="fas fa-edit"></i></button> <button class="btn-action btn-danger btn-xs" onclick="deletarCliente('${c.id}')"><i class="fas fa-trash"></i></button></td></tr>`).join('')}
+function updateDashboard(){const t=clientes.length;document.getElementById('dashboardStats').innerHTML=`<div class="stat-card"><div class="icon icon-gold"><i class="fas fa-users"></i></div><div class="value">${t}</div><div class="label">Total</div></div>`+statusList.map(s=>{const q=clientes.filter(c=>c.status===s.name).length;return`<div class="stat-card"><div class="icon" style="background:${s.color}20;color:${s.color}"><i class="fas fa-circle"></i></div><div class="value">${q}</div><div class="label">${s.name}</div></div>`}).join('');const ctx=document.getElementById('statusChart')?.getContext('2d');if(ctx){if(window.chart)window.chart.destroy();window.chart=new Chart(ctx,{type:'doughnut',data:{labels:statusList.map(s=>s.name),datasets:[{data:statusList.map(s=>clientes.filter(c=>c.status===s.name).length),backgroundColor:statusList.map(s=>s.color+'99'),borderWidth:2}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{color:'#a0a3b1'}}}}})}document.getElementById('recentClients').innerHTML=clientes.slice(0,5).map(c=>`<div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between"><span><strong>${c.nome}</strong><br><small style="color:var(--text-muted)">📁 ${c.pasta||'-'}</small></span><span class="badge ${getBadge(c.status)}">${c.status}</span></div>`).join('')||'<p style="text-align:center;padding:20px;">Nenhum</p>'}
 
-function filtrar(){
-    const b=document.getElementById('searchCliente')?.value?.toLowerCase()||'',s=document.getElementById('filterStatus')?.value||'todos',o=document.getElementById('sortOrder')?.value||'nome-asc';
-    let f=[...clientes];
-    if(b)f=f.filter(c=>(c.nome||'').toLowerCase().includes(b)||(c.email||'').toLowerCase().includes(b)||(c.telefone||'').includes(b));
-    if(s!=='todos')f=f.filter(c=>c.status===s);
-    if(o==='nome-asc')f.sort((a,b)=>(a.nome||'').localeCompare(b.nome||''));
-    else if(o==='nome-desc')f.sort((a,b)=>(b.nome||'').localeCompare(a.nome||''));
-    else f.sort((a,b)=>(b.dataCadastro?.toDate()||0)-(a.dataCadastro?.toDate()||0));
-    const t=document.getElementById('tabelaClientes');
-    if(!f.length){t.innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;">Nenhum cliente</td></tr>';return}
-    t.innerHTML=f.map(c=>`<tr><td><strong>${c.nome}</strong></td><td>${c.email||'-'}</td><td>${c.telefone||'-'}</td><td><span class="badge ${getBadge(c.status)}">${c.status||'Ativo'}</span></td><td style="font-size:.75em;color:var(--text-muted)">${c.pasta||'-'}</td><td><button class="btn-action btn-outline btn-xs" onclick="editarCliente('${c.id}')"><i class="fas fa-edit"></i></button> <button class="btn-action btn-danger btn-xs" onclick="deletarCliente('${c.id}')"><i class="fas fa-trash"></i></button></td></tr>`).join('');
-}
-
-function updateDashboard(){
-    const t=clientes.length;
-    document.getElementById('dashboardStats').innerHTML=`<div class="stat-card"><div class="icon icon-gold"><i class="fas fa-users"></i></div><div class="value">${t}</div><div class="label">Total</div></div>`+statusList.map(s=>{const q=clientes.filter(c=>c.status===s.name).length;return `<div class="stat-card"><div class="icon" style="background:${s.color}20;color:${s.color}"><i class="fas fa-circle"></i></div><div class="value">${q}</div><div class="label">${s.name}</div></div>`}).join('');
-    const ctx=document.getElementById('statusChart')?.getContext('2d');
-    if(ctx){if(window.chart)window.chart.destroy();window.chart=new Chart(ctx,{type:'doughnut',data:{labels:statusList.map(s=>s.name),datasets:[{data:statusList.map(s=>clientes.filter(c=>c.status===s.name).length),backgroundColor:statusList.map(s=>s.color+'99'),borderWidth:2}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{color:'#a0a3b1'}}}}})}
-    document.getElementById('recentClients').innerHTML=clientes.slice(0,5).map(c=>`<div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between"><span><strong>${c.nome}</strong><br><small style="color:var(--text-muted)">📁 ${c.pasta||'-'}</small></span><span class="badge ${getBadge(c.status)}">${c.status}</span></div>`).join('')||'<p style="text-align:center;padding:20px;">Nenhum</p>';
-}
-
-function abrirModal(cl=null){
-    document.getElementById('clienteForm').reset();document.getElementById('clienteId').value='';document.getElementById('modalTitle').textContent='Novo Cliente';updateStatusUI();
-    if(cl){document.getElementById('clienteId').value=cl.id;document.getElementById('clienteNome').value=cl.nome||'';document.getElementById('clienteEmail').value=cl.email||'';document.getElementById('clienteTelefone').value=cl.telefone||'';document.getElementById('clienteEmpresa').value=cl.empresa||'';document.getElementById('clienteDoc').value=cl.doc||'';document.getElementById('clienteStatus').value=cl.status||statusList[0]?.name;document.getElementById('clientePasta').value=cl.pasta||'';document.getElementById('clienteObs').value=cl.obs||'';document.getElementById('modalTitle').textContent='Editar Cliente'}
-    document.getElementById('clienteModal').classList.add('active');
-}
+function abrirModal(cl=null){document.getElementById('clienteForm').reset();document.getElementById('clienteId').value='';document.getElementById('modalTitle').textContent='Novo Cliente';updateStatusUI();if(cl){document.getElementById('clienteId').value=cl.id;document.getElementById('clienteNome').value=cl.nome||'';document.getElementById('clienteEmail').value=cl.email||'';document.getElementById('clienteTelefone').value=cl.telefone||'';document.getElementById('clienteEmpresa').value=cl.empresa||'';document.getElementById('clienteDoc').value=cl.doc||'';document.getElementById('clienteStatus').value=cl.status||statusList[0]?.name;document.getElementById('clientePasta').value=cl.pasta||'';document.getElementById('clienteObs').value=cl.obs||'';document.getElementById('modalTitle').textContent='Editar Cliente'}document.getElementById('clienteModal').classList.add('active')}
 function fecharModal(){document.getElementById('clienteModal').classList.remove('active')}
-async function salvarCliente(e){
-    e.preventDefault();
-    const id=document.getElementById('clienteId').value;
-    const d={nome:document.getElementById('clienteNome').value,email:document.getElementById('clienteEmail').value,telefone:document.getElementById('clienteTelefone').value,empresa:document.getElementById('clienteEmpresa').value,doc:document.getElementById('clienteDoc').value,status:document.getElementById('clienteStatus').value,pasta:document.getElementById('clientePasta').value,obs:document.getElementById('clienteObs').value};
-    if(id){await db.collection('clientes').doc(id).update(d)}else{d.dataCadastro=firebase.firestore.FieldValue.serverTimestamp();d.cadastradoPor=u?.email;await db.collection('clientes').add(d)}
-    fecharModal();carregarClientes();toast(id?'Atualizado!':'Cadastrado!','success');
-}
+async function salvarCliente(e){e.preventDefault();const id=document.getElementById('clienteId').value;const d={nome:document.getElementById('clienteNome').value,email:document.getElementById('clienteEmail').value,telefone:document.getElementById('clienteTelefone').value,empresa:document.getElementById('clienteEmpresa').value,doc:document.getElementById('clienteDoc').value,status:document.getElementById('clienteStatus').value,pasta:document.getElementById('clientePasta').value,obs:document.getElementById('clienteObs').value};if(id){await db.collection('clientes').doc(id).update(d)}else{d.dataCadastro=firebase.firestore.FieldValue.serverTimestamp();d.cadastradoPor=u?.email;await db.collection('clientes').add(d)}fecharModal();carregarClientes();toast(id?'Atualizado!':'Cadastrado!','success')}
 function editarCliente(id){const c=clientes.find(x=>x.id===id);if(c)abrirModal(c)}
 async function deletarCliente(id){if(confirm('Excluir?')){await db.collection('clientes').doc(id).delete();carregarClientes();toast('Excluído!','success')}}
 
-// IMPORTAÇÃO DE PASTAS
-document.getElementById('folderInput').addEventListener('change',async function(e){
-    const files=this.files;
+// ==================== IMPORTAÇÃO DE PASTAS ====================
+function processarArquivos(files){
     if(!files||files.length===0)return;
+    const progress=document.getElementById('importProgress'),fill=document.getElementById('progressFill'),txt=document.getElementById('progressText'),cnt=document.getElementById('progressCount'),list=document.getElementById('fileList');
+    progress.style.display='block';list.innerHTML='';
     
-    const progress=document.getElementById('importProgress');
-    const fill=document.getElementById('progressFill');
-    const txt=document.getElementById('progressText');
-    const cnt=document.getElementById('progressCount');
-    const list=document.getElementById('fileList');
-    
-    progress.style.display='block';
-    list.innerHTML='';
-    
-    // Agrupar por pasta
     const mapa={};let total=0;
     for(const f of files){
-        const path=f.webkitRelativePath||f.name;
-        const parts=path.split('/');
-        const pasta=parts.length>1?parts.slice(0,-1).join(' / '):'Raiz';
-        const nome=parts[parts.length-1];
-        if(nome.endsWith('.csv')){
-            if(!mapa[pasta])mapa[pasta]=[];
-            mapa[pasta].push(f);total++;
-        }
+        const path=f.webkitRelativePath||f.name,parts=path.split('/'),pasta=parts.length>1?parts.slice(0,-1).join(' / '):'Raiz',nome=parts[parts.length-1].toLowerCase();
+        if(nome.endsWith('.csv')||nome.endsWith('.txt')||nome.endsWith('.xlsx')||nome.endsWith('.xls')||!nome.includes('.')){if(!mapa[pasta])mapa[pasta]=[];mapa[pasta].push(f);total++}
     }
     
-    // Listar
-    list.innerHTML='<h4 style="margin-bottom:10px;color:var(--accent);">📁 Pastas encontradas:</h4>';
-    for(const[p,arq]of Object.entries(mapa)){list.innerHTML+=`<div class="file-item"><i class="fas fa-folder" style="color:#fbbc05"></i> <strong>${p}</strong> (${arq.length} CSV)</div>`;arq.forEach(a=>{list.innerHTML+=`<div class="file-item" style="padding-left:25px;"><i class="fas fa-file-csv" style="color:var(--success)"></i> ${a.name}</div>`})}
+    list.innerHTML='<h4 style="margin-bottom:10px;color:var(--accent);">📁 Arquivos encontrados:</h4>';
+    if(total===0){list.innerHTML+='<p style="color:var(--danger);text-align:center;padding:20px;">Nenhum arquivo compatível!</p>';progress.style.display='none';return}
+    for(const[p,arqs]of Object.entries(mapa)){list.innerHTML+=`<div class="file-item"><i class="fas fa-folder" style="color:#fbbc05"></i> <strong>${p}</strong> (${arqs.length})</div>`;arqs.forEach(a=>{list.innerHTML+=`<div class="file-item" style="padding-left:25px;"><i class="fas fa-file-alt" style="color:var(--success)"></i> ${a.name}</div>`})}
     
-    if(total===0){toast('Nenhum CSV encontrado!','error');progress.style.display='none';return}
-    
-    // Importar
-    let feito=0;const batch=db.batch();let bc=0;
-    for(const[pasta,arq]of Object.entries(mapa)){
-        for(const ar of arq){
-            const text=await ar.text();
-            const r=Papa.parse(text,{header:true,skipEmptyLines:true});
-            for(const item of r.data){
-                if(!item.nome&&!item.Nome&&!item.name&&!Object.values(item)[0])continue;
-                batch.set(db.collection('clientes').doc(),{nome:item.nome||item.Nome||item.name||Object.values(item)[0]||'Sem nome',email:item.email||item.Email||'',telefone:item.telefone||item.Telefone||item.tel||item.phone||'',empresa:item.empresa||item.Empresa||item.company||'',status:item.status||item.Status||statusList[0]?.name||'Ativo',pasta,obs:item.observacoes||item.obs||'',cadastradoPor:u?.email,dataCadastro:firebase.firestore.FieldValue.serverTimestamp()});
-                bc++;if(bc%400===0){await batch.commit();bc=0}
-            }
-            feito++;const pct=Math.round((feito/total)*100);fill.style.width=pct+'%';txt.textContent=`Importando ${pasta}...`;cnt.textContent=`${feito}/${total}`;
+    importarArquivos(mapa,total,fill,txt,cnt,list,progress);
+}
+
+async function importarArquivos(mapa,total,fill,txt,cnt,list,progress){
+    let feito=0,totalImp=0;
+    for(const[pasta,arqs]of Object.entries(mapa)){let batch=db.batch(),bc=0;
+        for(const arq of arqs){try{const text=await arq.text();if(!text||!text.trim()){feito++;continue}
+            const fl=text.split('\n')[0];let d=',';if(fl.includes(';')&&fl.split(';').length>fl.split(',').length)d=';';else if(fl.includes('\t'))d='\t';
+            const r=Papa.parse(text,{header:true,skipEmptyLines:true,delimiter:d});
+            if(r.data&&r.data.length>0){for(const item of r.data){const v=Object.values(item).filter(v=>v&&String(v).trim());if(!v.length)continue;
+                batch.set(db.collection('clientes').doc(),{nome:String(item.nome||item.Nome||item.name||item.Name||item.cliente||item.Cliente||item[Object.keys(item)[0]]||'Sem nome').trim(),email:item.email||item.Email||item['e-mail']||item.mail||'',telefone:item.telefone||item.Telefone||item.tel||item.Tel||item.phone||item.Phone||item.celular||item.Celular||'',empresa:item.empresa||item.Empresa||item.company||item.Company||'',status:item.status||item.Status||statusList[0]?.name||'Ativo',pasta,obs:item.observacoes||item.Observacoes||item.obs||item.Obs||'',cadastradoPor:u?.email,dataCadastro:firebase.firestore.FieldValue.serverTimestamp()});bc++;totalImp++;if(bc%400===0){await batch.commit();bc=0}}
+            }}catch(err){console.error('Erro:',arq.name,err)}
+            feito++;fill.style.width=Math.round((feito/total)*100)+'%';txt.textContent='Processando...';cnt.textContent=feito+'/'+total;
         }
+        if(bc>0)await batch.commit()
     }
-    if(bc>0)await batch.commit();
-    fill.style.width='100%';txt.textContent='✅ Concluído!';toast(`${total} arquivos importados!`,'success');carregarClientes();
-    setTimeout(()=>{progress.style.display='none';list.innerHTML='';this.value=''},3000);
-});
-
-// Upload área (arrastar)
-const ua=document.getElementById('uploadArea');
-ua.addEventListener('dragover',e=>{e.preventDefault();ua.classList.add('dragover')});
-ua.addEventListener('dragleave',()=>ua.classList.remove('dragover'));
-ua.addEventListener('drop',e=>{
-    e.preventDefault();ua.classList.remove('dragover');
-    const dt=e.dataTransfer;
-    if(dt.files.length>0){document.getElementById('folderInput').files=dt.files;document.getElementById('folderInput').dispatchEvent(new Event('change'))}
-});
-
-function importarCSV(event){
-    const f=event.target.files[0];if(!f)return;
-    Papa.parse(f,{header:true,skipEmptyLines:true,complete:async r=>{
-        if(r.data.length>0){const batch=db.batch();let c=0;
-            for(const item of r.data){if(!item.nome&&!item.Nome&&!item.name&&!Object.values(item)[0])continue;
-                batch.set(db.collection('clientes').doc(),{nome:item.nome||item.Nome||item.name||Object.values(item)[0]||'Sem nome',email:item.email||item.Email||'',telefone:item.telefone||item.Telefone||item.tel||'',empresa:item.empresa||item.Empresa||'',status:item.status||item.Status||statusList[0]?.name||'Ativo',pasta:'Upload direto',cadastradoPor:u?.email,dataCadastro:firebase.firestore.FieldValue.serverTimestamp()});c++;if(c%400===0)await batch.commit()}
-            await batch.commit();carregarClientes();toast(`${r.data.length} clientes!`,'success');}event.target.value='';
-    }});
+    fill.style.width='100%';txt.textContent='✅ Concluído!';toast(`✅ ${totalImp} clientes importados!`,'success');carregarClientes();
+    setTimeout(()=>{progress.style.display='none';list.innerHTML='';document.getElementById('folderInput').value='';document.getElementById('multiFileInput').value=''},4000);
 }
 
-// USUÁRIOS (ADMIN)
-async function carregarUsuarios(){
-    if(userRole!=='admin')return toast('Acesso restrito','error');
-    const s=await db.collection('usuarios').orderBy('criadoEm','desc').get();
-    const usuarios=[];s.forEach(d=>usuarios.push({id:d.id,...d.data()}));
-    const t=document.getElementById('tabelaUsuarios');
-    if(!usuarios.length){t.innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;">Nenhum usuário</td></tr>';return}
-    t.innerHTML=usuarios.map(us=>`<tr><td><strong>${us.nome||'Sem nome'}</strong></td><td>${us.email}</td><td><span class="badge ${us.role==='admin'?'badge-admin':'badge-user'}">${us.role||'user'}</span></td><td style="font-size:.75em">${us.criadoEm?new Date(us.criadoEm.toDate()).toLocaleDateString('pt-BR'):'-'}</td><td style="font-size:.75em">${us.ultimoAcesso?new Date(us.ultimoAcesso.toDate()).toLocaleString('pt-BR'):'-'}</td><td><button class="btn-action btn-outline btn-xs" onclick="mudarRole('${us.id}','${us.role||'user'}')"><i class="fas fa-edit"></i> Alterar</button></td></tr>`).join('');
-}
+document.getElementById('folderInput').addEventListener('change',function(e){processarArquivos(this.files)});
+document.getElementById('multiFileInput').addEventListener('change',function(e){processarArquivos(this.files)});
 
-async function mudarRole(uid,roleAtual){
-    const nova=prompt('Novo cargo (admin, user, ou outro):',roleAtual);
-    if(!nova)return;
-    await db.collection('usuarios').doc(uid).update({role:nova});
-    carregarUsuarios();toast('Cargo atualizado!','success');
-}
+const ua=document.getElementById('uploadArea');if(ua){ua.addEventListener('dragover',e=>{e.preventDefault();ua.classList.add('dragover')});ua.addEventListener('dragleave',()=>ua.classList.remove('dragover'));ua.addEventListener('drop',e=>{e.preventDefault();ua.classList.remove('dragover');processarArquivos(e.dataTransfer.files)})}
 
-function gerarPDF(){const{jsPDF}=window.jspdf;const d=new jsPDF();d.text('Kronos-PI',14,20);d.autoTable({startY:30,head:[['Nome','Email','Telefone','Empresa','Status','Pasta']],body:clientes.map(c=>[c.nome,c.email,c.telefone,c.empresa,c.status,c.pasta])});d.save('clientes.pdf');toast('PDF!','success')}
+// USUÁRIOS
+async function carregarUsuarios(){if(userRole!=='admin')return;const s=await db.collection('usuarios').orderBy('criadoEm','desc').get();const us=[];s.forEach(d=>us.push({id:d.id,...d.data()}));const t=document.getElementById('tabelaUsuarios');if(!us.length){t.innerHTML='<tr><td colspan="5" style="text-align:center;padding:40px;">Nenhum</td></tr>';return}t.innerHTML=us.map(u=>`<tr><td><strong>${u.nome||'-'}</strong></td><td>${u.email}</td><td><span class="badge ${u.role==='admin'?'badge-admin':'badge-user'}">${u.role||'user'}</span></td><td style="font-size:.75em">${u.criadoEm?new Date(u.criadoEm.toDate()).toLocaleDateString('pt-BR'):'-'}</td><td><button class="btn-action btn-outline btn-xs" onclick="mudarRole('${u.id}','${u.role||'user'}')">Alterar</button></td></tr>`).join('')}
+async function mudarRole(uid,ra){const n=prompt('Novo cargo:',ra);if(!n)return;await db.collection('usuarios').doc(uid).update({role:n});carregarUsuarios();toast('Atualizado!','success')}
+
+function gerarPDF(){const{jsPDF}=window.jspdf;const d=new jsPDF();d.text('Kronos-PI',14,20);d.autoTable({startY:30,head:[['Nome','Email','Telefone','Status','Pasta']],body:clientes.map(c=>[c.nome,c.email,c.telefone,c.status,c.pasta])});d.save('clientes.pdf');toast('PDF!','success')}
 function gerarBalancete(){const{jsPDF}=window.jspdf;const d=new jsPDF();d.text('Balancete',14,20);let y=40;statusList.forEach(s=>{d.text(`${s.name}: ${clientes.filter(c=>c.status===s.name).length}`,14,y);y+=10});d.save('balancete.pdf');toast('Gerado!','success')}
 function baixarBackup(){const b={data:new Date().toISOString(),clientes,statusList},bl=new Blob([JSON.stringify(b)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(bl);a.download='backup.json';a.click();toast('Backup!','success')}
 async function restaurarBackup(event){const f=event.target.files[0];if(!f)return;const r=new FileReader();r.onload=async e=>{try{const b=JSON.parse(e.target.result);if(b.clientes&&confirm('Restaurar?')){if(b.statusList){statusList=b.statusList;await db.collection('config').doc('status').set({list:statusList});updateStatusUI()}const batch=db.batch();b.clientes.forEach(c=>batch.set(db.collection('clientes').doc(),c));await batch.commit();carregarClientes();toast('Restaurado!','success')}}catch{toast('Inválido','error')}};r.readAsText(f);event.target.value=''}
